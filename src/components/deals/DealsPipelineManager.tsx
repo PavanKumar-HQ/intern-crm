@@ -13,6 +13,12 @@ import {
   Trash2,
   Edit2,
   CheckCircle2,
+  TrendingUp,
+  IndianRupee,
+  Filter,
+  Layers,
+  Briefcase,
+  User,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -46,6 +52,8 @@ export default function DealsPipelineManager() {
   const [deals, setDeals] = useState<DealItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [selectedStage, setSelectedStage] = useState('ALL');
+  const [selectedOwner, setSelectedOwner] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -265,10 +273,16 @@ export default function DealsPipelineManager() {
   };
 
   const filteredDeals = deals.filter((d) => {
+    if (selectedStage !== 'ALL' && d.stage !== selectedStage) return false;
+    if (selectedOwner !== 'ALL') {
+      const owner = d.owner?.name || d.ownerName || '';
+      if (owner !== selectedOwner) return false;
+    }
     if (!search.trim()) return true;
     const q = search.toLowerCase();
     const cName = d.company?.primaryName || d.companyName || '';
-    return d.title.toLowerCase().includes(q) || cName.toLowerCase().includes(q);
+    const oName = d.owner?.name || d.ownerName || '';
+    return d.title.toLowerCase().includes(q) || cName.toLowerCase().includes(q) || oName.toLowerCase().includes(q);
   });
 
   const totalPipelineValue = deals.reduce((acc, d) => acc + (d.amount || 0), 0);
@@ -279,18 +293,28 @@ export default function DealsPipelineManager() {
   const wonDealsValue = deals
     .filter((d) => d.stage === 'WON')
     .reduce((acc, d) => acc + (d.amount || 0), 0);
+  const activeDealsCount = deals.filter((d) => d.stage !== 'WON' && d.stage !== 'LOST').length;
+  const wonDealsCount = deals.filter((d) => d.stage === 'WON').length;
+
+  const ownersList = Array.from(
+    new Set(deals.map((d) => d.owner?.name || d.ownerName).filter(Boolean))
+  ) as string[];
 
   return (
     <div className="space-y-6 fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E2DDD2]">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
-            <Handshake className="w-6 h-6 text-[#4F46E5]" />
-            Deals & Opportunities Pipeline
-          </h1>
-          <p className="text-xs text-[#57534E] mt-0.5">
-            Drag-and-drop opportunity board tracking pipeline velocity, revenue probability, and closing stages.
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center text-[#4F46E5]">
+              <Handshake className="w-4 h-4" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-[#1C1917]">
+              Deals & Opportunities Pipeline
+            </h1>
+          </div>
+          <p className="text-xs text-[#57534E] mt-1 ml-10">
+            Interactive opportunity board tracking pipeline velocity, revenue probability, and closing stages.
           </p>
         </div>
 
@@ -298,7 +322,7 @@ export default function DealsPipelineManager() {
           <button
             type="button"
             onClick={fetchDeals}
-            className="btn-secondary text-xs py-2 px-3 cursor-pointer"
+            className="btn-secondary text-xs py-2 px-3 cursor-pointer flex items-center gap-1.5"
             title="Refresh Deals"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#4F46E5]' : ''}`} />
@@ -307,49 +331,156 @@ export default function DealsPipelineManager() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="btn-primary text-xs py-2 px-4 cursor-pointer"
+            className="btn-primary text-xs py-2 px-4 cursor-pointer flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            <span>New Deal</span>
+            <span>New Opportunity</span>
           </button>
         </div>
       </div>
 
-      {/* Control Strip & Metrics */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5 p-3.5 rounded-xl bg-white border border-[#E2DDD2] shadow-xs">
-        <div className="flex items-center gap-3 text-xs flex-wrap font-medium">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#E2DDD2]">
-            <span className="text-[#78716C]">Total Pipeline:</span>
-            <span className="font-bold text-[#1C1917] font-mono">
-              ₹{(totalPipelineValue / 100000).toFixed(1)}L
-            </span>
+      {/* KPI Metrics Overview Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="bg-white border border-[#E2DDD2] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#78716C] uppercase tracking-wider">Total Pipeline</span>
+            <div className="w-6 h-6 rounded-md bg-[#FAF8F5] border border-[#E2DDD2] flex items-center justify-center text-[#78716C]">
+              <Briefcase className="w-3.5 h-3.5" />
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46]">
-            <span>Weighted Forecast:</span>
-            <span className="font-bold font-mono">
-              ₹{(weightedPipeline / 100000).toFixed(1)}L
-            </span>
+          <div className="text-xl font-bold font-mono text-[#1C1917] mt-1.5">
+            ₹{(totalPipelineValue / 100000).toFixed(2)}L
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-[#4338CA]">
-            <span>Settled Won:</span>
-            <span className="font-bold font-mono">
-              ₹{(wonDealsValue / 100000).toFixed(1)}L
-            </span>
+          <div className="text-[11px] text-[#78716C] mt-1">
+            Across {deals.length} tracked opportunities
           </div>
-          <span className="text-xs text-[#78716C] ml-1">
-            {deals.length} active opportunities
-          </span>
         </div>
 
-        <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
+        <div className="bg-white border border-[#E2DDD2] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#065F46] uppercase tracking-wider">Weighted Forecast</span>
+            <div className="w-6 h-6 rounded-md bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-center text-[#065F46]">
+              <TrendingUp className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="text-xl font-bold font-mono text-[#065F46] mt-1.5">
+            ₹{(weightedPipeline / 100000).toFixed(2)}L
+          </div>
+          <div className="text-[11px] text-[#78716C] mt-1">
+            Probability adjusted revenue
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#E2DDD2] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#4338CA] uppercase tracking-wider">Settled Won</span>
+            <div className="w-6 h-6 rounded-md bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center text-[#4338CA]">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="text-xl font-bold font-mono text-[#4338CA] mt-1.5">
+            ₹{(wonDealsValue / 100000).toFixed(2)}L
+          </div>
+          <div className="text-[11px] text-[#78716C] mt-1">
+            {wonDealsCount} contracts finalized
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#E2DDD2] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#D97706] uppercase tracking-wider">Active In Flight</span>
+            <div className="w-6 h-6 rounded-md bg-[#FFFBEB] border border-[#FDE68A] flex items-center justify-center text-[#D97706]">
+              <Layers className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="text-xl font-bold font-mono text-[#1C1917] mt-1.5">
+            {activeDealsCount} Deals
+          </div>
+          <div className="text-[11px] text-[#78716C] mt-1">
+            Currently advancing stages
+          </div>
+        </div>
+      </div>
+
+      {/* Spacious Dedicated Search & Filter Toolbar */}
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1 max-w-lg">
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search deals, company..."
+            placeholder="Search deals by title, company, or owner..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-60 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#A8A29E] focus:outline-none focus:border-[#4F46E5]"
+            className="w-full pl-9 pr-8 py-2 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#A8A29E] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-all shadow-2xs"
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#A8A29E] hover:text-[#1C1917]"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-1.5 text-xs text-[#78716C]">
+            <Filter className="w-3.5 h-3.5" />
+            <span className="font-medium hidden sm:inline">Stage:</span>
+            <select
+              value={selectedStage}
+              onChange={(e) => setSelectedStage(e.target.value)}
+              className="px-2.5 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-xs font-semibold text-[#1C1917] focus:outline-none focus:border-[#4F46E5] cursor-pointer shadow-2xs"
+            >
+              <option value="ALL">All Stages ({deals.length})</option>
+              {STAGES.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.label} ({deals.filter((d) => d.stage === s.id).length})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {ownersList.length > 0 && (
+            <div className="flex items-center gap-1.5 text-xs text-[#78716C]">
+              <User className="w-3.5 h-3.5" />
+              <span className="font-medium hidden sm:inline">Owner:</span>
+              <select
+                value={selectedOwner}
+                onChange={(e) => setSelectedOwner(e.target.value)}
+                className="px-2.5 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-xs font-semibold text-[#1C1917] focus:outline-none focus:border-[#4F46E5] cursor-pointer shadow-2xs"
+              >
+                <option value="ALL">All Owners</option>
+                {ownersList.map((owner) => (
+                  <option key={owner} value={owner}>
+                    {owner}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {(selectedStage !== 'ALL' || selectedOwner !== 'ALL' || search) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedStage('ALL');
+                setSelectedOwner('ALL');
+                setSearch('');
+              }}
+              className="px-2.5 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-xs font-semibold text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+            >
+              <X className="w-3 h-3" />
+              <span>Reset</span>
+            </button>
+          )}
+
+          <div className="text-xs font-semibold text-[#78716C] px-2 py-1 bg-white rounded-lg border border-[#E2DDD2] shadow-2xs">
+            {filteredDeals.length} of {deals.length} deals
+          </div>
         </div>
       </div>
 
