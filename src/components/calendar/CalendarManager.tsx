@@ -10,6 +10,7 @@ import {
   RefreshCw,
   X,
   ListTodo,
+  CheckSquare,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -22,6 +23,7 @@ interface CalendarEventItem {
   endTime?: string;
   companyName?: string;
   agenda?: string | null;
+  description?: string | null;
   priority?: string;
 }
 
@@ -131,22 +133,22 @@ export default function CalendarManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <CalendarIcon className="w-6 h-6 text-[#4F46E5]" />
             Calendar & Engagements
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Unified chronological schedule of client discovery calls, review meetings, and task deadlines.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-lg bg-white border border-[#E5E5E2] p-0.5 text-xs font-semibold shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center rounded-lg bg-[#EAE6DC] p-1 text-xs font-semibold">
             <button
               type="button"
               onClick={() => setViewMode('agenda')}
-              className={`px-3 py-1 rounded-md transition-all ${
-                viewMode === 'agenda' ? 'bg-[#171717] text-white' : 'text-[#5E5E5E] hover:text-[#171717]'
+              className={`px-3.5 py-1.5 rounded-md transition-all font-semibold ${
+                viewMode === 'agenda' ? 'bg-[#1C1917] text-white shadow-xs' : 'text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               Agenda
@@ -154,8 +156,8 @@ export default function CalendarManager() {
             <button
               type="button"
               onClick={() => setViewMode('month')}
-              className={`px-3 py-1 rounded-md transition-all ${
-                viewMode === 'month' ? 'bg-[#171717] text-white' : 'text-[#5E5E5E] hover:text-[#171717]'
+              className={`px-3.5 py-1.5 rounded-md transition-all font-semibold ${
+                viewMode === 'month' ? 'bg-[#1C1917] text-white shadow-xs' : 'text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               Month View
@@ -165,37 +167,39 @@ export default function CalendarManager() {
           <button
             type="button"
             onClick={fetchCalendar}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
             title="Refresh"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="btn-primary text-sm py-2 px-4 shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Schedule Meeting
           </button>
         </div>
       </div>
 
       {/* Main Events Container */}
-      <div className="bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E2]">
-          <span className="text-xs font-bold text-[#171717] uppercase tracking-wider">
+      <div className="bg-white border border-[#E2DDD2] rounded-xl p-5 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E2DDD2]">
+          <span className="text-xs font-bold text-[#1C1917] uppercase tracking-wider">
             Scheduled Engagements & Deadlines
           </span>
-          <span className="text-xs text-[#5E5E5E]">{events.length} Items Listed</span>
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#EAE6DC] text-[#57534E]">
+            {events.length} Items Listed
+          </span>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {events.length === 0 && !isLoading ? (
-            <div className="py-16 text-center text-xs text-[#5E5E5E]">
-              <CalendarIcon className="w-8 h-8 text-[#5E5E5E] mx-auto mb-2 opacity-50" />
-              <p className="font-medium text-[#171717]">No events scheduled</p>
-              <p className="text-[11px] text-[#5E5E5E] mt-0.5">
+            <div className="py-16 text-center text-sm text-[#78716C]">
+              <CalendarIcon className="w-8 h-8 text-[#78716C] mx-auto mb-2 opacity-50" />
+              <p className="font-bold text-[#1C1917]">No events scheduled</p>
+              <p className="text-xs text-[#78716C] mt-1">
                 Schedule a client meeting or create tasks with due dates to populate the calendar.
               </p>
             </div>
@@ -216,52 +220,55 @@ export default function CalendarManager() {
               return (
                 <div
                   key={`${evt.type}-${evt.id}`}
-                  className="p-3 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] hover:border-[#6366F1] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="p-4 rounded-xl bg-white border border-[#E2DDD2] hover:border-[#4F46E5] hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-white border border-[#E5E5E2] shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3.5">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
+                        isMeeting
+                          ? 'bg-purple-100 text-purple-700 border border-purple-200'
+                          : 'bg-amber-100 text-amber-700 border border-amber-200'
+                      }`}
+                    >
                       {isMeeting ? (
-                        <Video className="w-4 h-4 text-[#6366F1]" />
+                        <Video className="w-5 h-5" />
                       ) : (
-                        <ListTodo className="w-4 h-4 text-[#16A34A]" />
+                        <CheckSquare className="w-5 h-5" />
                       )}
                     </div>
-
                     <div>
-                      <div className="text-xs font-semibold text-[#171717] flex items-center gap-2">
-                        <span>{evt.title}</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sm text-[#1C1917]">{evt.title}</span>
                         <span
-                          className={`text-[10px] px-1.5 py-0.2 rounded font-medium border ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                             isMeeting
-                              ? 'bg-[#EFF6FF] text-[#1E40AF] border-[#BFDBFE]'
-                              : 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]'
+                              ? 'bg-purple-50 text-purple-700 border border-purple-300'
+                              : 'bg-amber-50 text-amber-700 border border-amber-300'
                           }`}
                         >
                           {isMeeting ? 'Meeting' : 'Task'}
                         </span>
                       </div>
-
                       {evt.companyName && (
-                        <div className="text-[11px] text-[#5E5E5E] mt-0.5 flex items-center gap-1.5">
-                          <Building2 className="w-3 h-3 text-[#5E5E5E]" />
+                        <div className="flex items-center gap-1.5 text-xs text-[#57534E] mt-1">
+                          <Building2 className="w-3.5 h-3.5 text-[#78716C]" />
                           <span>{evt.companyName}</span>
                         </div>
                       )}
-
-                      {evt.agenda && (
-                        <p className="text-[11px] text-[#5E5E5E] mt-1 line-clamp-1 italic">
-                          "{evt.agenda}"
+                      {evt.description && (
+                        <p className="text-xs text-[#78716C] mt-1 line-clamp-1 italic">
+                          &ldquo;{evt.description}&rdquo;
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="text-right text-[11px] shrink-0">
-                    <div className="font-semibold text-[#171717]">{dateFormatted}</div>
-                    <div className="text-[#5E5E5E] flex items-center justify-end gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" />
-                      <span>{timeFormatted}</span>
-                    </div>
+                  <div className="flex items-center gap-3 sm:flex-col sm:items-end text-xs shrink-0 font-medium">
+                    <span className="font-bold text-sm text-[#1C1917]">{dateFormatted}</span>
+                    <span className="text-[#57534E] flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#78716C]" />
+                      {timeFormatted}
+                    </span>
                   </div>
                 </div>
               );

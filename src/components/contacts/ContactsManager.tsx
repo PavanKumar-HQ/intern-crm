@@ -109,55 +109,80 @@ export default function ContactsManager() {
     }
   };
 
+  const getAvatarBadge = (name: string) => {
+    const initials = name
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'CT';
+    const charCode = name.charCodeAt(0) || 0;
+    const colors = [
+      'bg-[#4F46E5] text-white',
+      'bg-[#16A34A] text-white',
+      'bg-[#7C3AED] text-white',
+      'bg-[#D97706] text-white',
+      'bg-[#E11D48] text-white',
+      'bg-[#0284C7] text-white',
+    ];
+    const color = colors[charCode % colors.length];
+
+    return (
+      <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center text-xs font-bold shrink-0 shadow-xs`}>
+        {initials}
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Contact className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Contact className="w-6 h-6 text-[#4F46E5]" />
             Contacts Directory
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Verified executive profiles, stakeholder roles, direct email channels, and phone numbers.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchContacts}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
             title="Refresh database"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="btn-primary text-sm py-2 px-4 shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Add Contact
           </button>
         </div>
       </div>
 
       {/* Search and Count Bar */}
-      <div className="p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <span className="text-xs font-semibold text-[#171717]">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <span className="text-sm font-bold text-[#1C1917]">
           {contacts.length} Registered Contacts
         </span>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5E5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search contacts by name, role, email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchContacts()}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#171717] placeholder-[#5E5E5E] focus:outline-none focus:border-[#6366F1]"
+            className="w-full sm:w-72 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -165,33 +190,33 @@ export default function ContactsManager() {
       {/* Main Content Area */}
       <div className="flex gap-4 items-start">
         {/* Table */}
-        <div className="flex-1 bg-white border border-[#E5E5E2] rounded-xl overflow-hidden shadow-xs">
+        <div className="flex-1 bg-white border border-[#E2DDD2] rounded-xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="bg-[#FAFAF9] border-b border-[#E5E5E2] text-[#5E5E5E]">
-                  <th className="py-3 px-4 font-semibold">Name</th>
-                  <th className="py-3 px-4 font-semibold">Company</th>
-                  <th className="py-3 px-4 font-semibold">Role</th>
-                  <th className="py-3 px-4 font-semibold">Email</th>
-                  <th className="py-3 px-4 font-semibold">Phone</th>
-                  <th className="py-3 px-4 font-semibold text-center">Type</th>
-                  <th className="py-3 px-4 font-semibold text-right">Actions</th>
+                <tr className="bg-[#F0EDE5] border-b border-[#E2DDD2] text-[#78716C]">
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Name</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Company</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Role</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Email</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Phone</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Type</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E5E2]">
+              <tbody className="divide-y divide-[#EAE6DC]">
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#5E5E5E]">
+                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
                       Loading contacts from database...
                     </td>
                   </tr>
                 ) : contacts.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#5E5E5E]">
-                      <Contact className="w-8 h-8 text-[#5E5E5E] mx-auto mb-2 opacity-50" />
-                      <p className="font-medium text-[#171717]">No contacts found</p>
-                      <p className="text-[11px] text-[#5E5E5E] mt-0.5">
+                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
+                      <Contact className="w-8 h-8 text-[#78716C] mx-auto mb-2 opacity-50" />
+                      <p className="font-bold text-[#1C1917]">No contacts found</p>
+                      <p className="text-xs text-[#78716C] mt-1">
                         Add a contact record to keep key stakeholder details readily accessible.
                       </p>
                     </td>
@@ -205,32 +230,30 @@ export default function ContactsManager() {
                         key={contact.id}
                         onClick={() => setSelectedContact(contact)}
                         className={`cursor-pointer transition-colors ${
-                          isSelected ? 'bg-[#F5F3FF]' : 'hover:bg-[#FAFAF9]'
+                          isSelected ? 'bg-[#EEF2FF]' : 'hover:bg-[#FAF8F5]'
                         }`}
                       >
-                        <td className="py-3 px-4 font-semibold text-[#171717]">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#FAFAF9] border border-[#E5E5E2] flex items-center justify-center text-[10px] font-bold text-[#6366F1]">
-                              {contact.name.slice(0, 2).toUpperCase()}
-                            </div>
-                            <span>{contact.name}</span>
+                        <td className="py-3.5 px-4 font-semibold text-[#1C1917]">
+                          <div className="flex items-center gap-3">
+                            {getAvatarBadge(contact.name)}
+                            <span className="font-semibold text-sm">{contact.name}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#171717]">
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <Building2 className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
+                        <td className="py-3.5 px-4 text-[#1C1917]">
+                          <div className="flex items-center gap-2 font-medium text-sm">
+                            <Building2 className="w-4 h-4 text-[#78716C] shrink-0" />
                             <span>{contact.company?.primaryName || 'Independent'}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs font-medium">
                           {contact.role || '-'}
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs">
                           {contact.email ? (
                             <a
                               href={`mailto:${contact.email}`}
                               onClick={(e) => e.stopPropagation()}
-                              className="text-[#6366F1] hover:underline"
+                              className="text-[#4F46E5] hover:underline font-medium"
                             >
                               {contact.email}
                             </a>
@@ -238,28 +261,28 @@ export default function ContactsManager() {
                             '-'
                           )}
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs font-mono">
                           {contact.phone || '-'}
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <td className="py-3.5 px-4 text-center">
                           {contact.isPrimary ? (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] font-medium">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 font-semibold text-xs">
                               Primary
                             </span>
                           ) : (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F7F7F5] text-[#5E5E5E] border border-[#E5E5E2]">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-medium text-xs">
                               Stakeholder
                             </span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                           <button
                             type="button"
                             onClick={() => handleDelete(contact.id)}
-                            className="p-1 rounded text-[#5E5E5E] hover:text-[#DC2626] hover:bg-[#FEF2F2] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-[#FEE2E2] text-[#78716C] hover:text-[#B91C1C] transition-colors"
                             title="Delete contact"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </td>
                       </tr>

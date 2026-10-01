@@ -123,52 +123,94 @@ export default function CompanyDirectoryManager() {
     );
   });
 
+  const getCompanyStatusBadge = (status: string) => {
+    switch (status) {
+      case 'CUSTOMER':
+      case 'WON':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
+            Customer
+          </span>
+        );
+      case 'OUTREACH_READY':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-300">
+            Outreach Ready
+          </span>
+        );
+      case 'QUALIFIED':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-300">
+            Qualified
+          </span>
+        );
+      case 'ENGAGED':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-300">
+            Engaged
+          </span>
+        );
+      case 'VALIDATED':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-300">
+            Validated
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-300">
+            {status}
+          </span>
+        );
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Building2 className="w-6 h-6 text-[#4F46E5]" />
             Client Accounts & Companies
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Deduplicated organization entities, stakeholder contacts, active pipeline deals, and deliverables.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchCompanies}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
             title="Refresh database"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="btn-primary text-sm py-2 px-4 shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Add Company
           </button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <div className="flex items-center gap-2 flex-wrap">
           {['ALL', 'DISCOVERED', 'QUALIFIED', 'ENGAGED', 'CUSTOMER'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`text-xs px-3.5 py-1.5 rounded-lg font-semibold transition-colors ${
                 statusFilter === st
-                  ? 'bg-[#171717] text-white'
-                  : 'bg-[#F7F7F5] hover:bg-[#E5E5E2] text-[#5E5E5E]'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-white hover:bg-[#EAE6DC] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
               {st}
@@ -177,14 +219,14 @@ export default function CompanyDirectoryManager() {
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5E5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search companies by name, domain, city..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchCompanies()}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#171717] placeholder-[#5E5E5E] focus:outline-none focus:border-[#6366F1]"
+            className="w-full sm:w-72 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -192,33 +234,33 @@ export default function CompanyDirectoryManager() {
       {/* Main Content Area */}
       <div className="flex gap-4 items-start">
         {/* Companies Table */}
-        <div className="flex-1 bg-white border border-[#E5E5E2] rounded-xl overflow-hidden shadow-xs">
+        <div className="flex-1 bg-white border border-[#E2DDD2] rounded-xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="bg-[#FAFAF9] border-b border-[#E5E5E2] text-[#5E5E5E]">
-                  <th className="py-3 px-4 font-semibold">Account / Company</th>
-                  <th className="py-3 px-4 font-semibold">Domain</th>
-                  <th className="py-3 px-4 font-semibold">City / Region</th>
-                  <th className="py-3 px-4 font-semibold">Industry</th>
-                  <th className="py-3 px-4 font-semibold text-center">Contacts</th>
-                  <th className="py-3 px-4 font-semibold text-center">Deals</th>
-                  <th className="py-3 px-4 font-semibold text-center">Status</th>
+                <tr className="bg-[#F0EDE5] border-b border-[#E2DDD2] text-[#78716C]">
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Account / Company</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Domain</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">City / Region</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider">Industry</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Contacts</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Deals</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E5E2]">
+              <tbody className="divide-y divide-[#EAE6DC]">
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#5E5E5E]">
+                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
                       Loading company directory...
                     </td>
                   </tr>
                 ) : filteredCompanies.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#5E5E5E]">
-                      <Building2 className="w-8 h-8 text-[#5E5E5E] mx-auto mb-2 opacity-50" />
-                      <p className="font-medium text-[#171717]">No companies found</p>
-                      <p className="text-[11px] text-[#5E5E5E] mt-0.5">
+                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
+                      <Building2 className="w-8 h-8 text-[#78716C] mx-auto mb-2 opacity-50" />
+                      <p className="font-bold text-[#1C1917]">No companies found</p>
+                      <p className="text-xs text-[#78716C] mt-1">
                         Add an account record or ingest client leads to populate the company directory.
                       </p>
                     </td>
@@ -232,40 +274,44 @@ export default function CompanyDirectoryManager() {
                         key={comp.id}
                         onClick={() => setSelectedCompany(comp)}
                         className={`cursor-pointer transition-colors ${
-                          isSelected ? 'bg-[#F5F3FF]' : 'hover:bg-[#FAFAF9]'
+                          isSelected ? 'bg-[#EEF2FF]' : 'hover:bg-[#FAF8F5]'
                         }`}
                       >
-                        <td className="py-3 px-4 font-semibold text-[#171717]">
-                          <div className="flex items-center gap-2">
-                            <Building2 className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
+                        <td className="py-3.5 px-4 font-semibold text-[#1C1917]">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-[#EFECE4] border border-[#DDD7C9] flex items-center justify-center shrink-0 text-[#4F46E5]">
+                              <Building2 className="w-4 h-4" />
+                            </div>
                             <span>{comp.primaryName}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E]">
                           {comp.canonicalDomain ? (
-                            <span className="text-[#6366F1] font-mono text-[11px]">
+                            <span className="text-[#4F46E5] font-mono text-xs font-semibold">
                               {comp.canonicalDomain}
                             </span>
                           ) : (
                             '-'
                           )}
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs font-medium">
                           {comp.city || '-'}
                         </td>
-                        <td className="py-3 px-4 text-[#5E5E5E]">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs font-medium">
                           {comp.industry || 'Enterprise Services'}
                         </td>
-                        <td className="py-3 px-4 text-center font-medium text-[#171717]">
-                          {comp.contacts?.length || 0}
-                        </td>
-                        <td className="py-3 px-4 text-center font-medium text-[#6366F1]">
-                          {comp.deals?.length || 0}
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          <span className="text-[10px] px-2 py-0.5 rounded bg-[#F7F7F5] border border-[#E5E5E2] font-semibold text-[#171717]">
-                            {comp.currentStatus}
+                        <td className="py-3.5 px-4 text-center font-bold text-[#1C1917]">
+                          <span className="px-2 py-0.5 rounded-full bg-[#EAE6DC] text-xs">
+                            {comp.contacts?.length || 0}
                           </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-bold text-[#4F46E5]">
+                          <span className="px-2 py-0.5 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-xs">
+                            {comp.deals?.length || 0}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
+                          {getCompanyStatusBadge(comp.currentStatus)}
                         </td>
                       </tr>
                     );

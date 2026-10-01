@@ -144,71 +144,71 @@ export default function RawLeadsManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-500" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Users className="w-6 h-6 text-[#4F46E5]" />
             Raw Leads Ingestion & Normalization
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-sm text-[#57534E] mt-1">
             Audit trail of all incoming leads prior to entity resolution, phone/domain deduplication, and capability matching.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             disabled={isIngesting}
             onClick={handleSimulateIngest}
-            className="text-xs px-3 py-2 rounded-lg bg-[#202026] hover:bg-[#282830] border border-white/10 text-zinc-200 hover:text-white font-medium transition-all flex items-center gap-1.5"
+            className="text-xs px-3.5 py-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#1C1917] font-semibold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <Sparkles className="w-4 h-4 text-[#4F46E5]" />
             {isIngesting ? 'Ingesting...' : 'Simulate Ingestion'}
           </button>
           <Link
             href="/sources"
-            className="text-xs px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
+            className="text-xs px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
           >
-            <Upload className="w-3.5 h-3.5" />
+            <Upload className="w-4 h-4" />
             Import CSV / Sources
           </Link>
         </div>
       </div>
 
       {/* Stats bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-xl bg-[#121215] border border-white/10">
-          <span className="text-[11px] text-zinc-400 font-semibold uppercase">Total Ingested</span>
-          <div className="text-xl font-extrabold text-white mt-1">{leads.length}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div className="p-3.5 rounded-xl bg-white border border-[#E2DDD2] shadow-xs">
+          <span className="text-[11px] text-[#78716C] font-semibold uppercase tracking-wider">Total Ingested</span>
+          <div className="text-xl font-bold text-[#1C1917] mt-1">{leads.length}</div>
         </div>
-        <div className="p-3.5 rounded-xl bg-[#121215] border border-white/10">
-          <span className="text-[11px] text-zinc-400 font-semibold uppercase">Unique Companies</span>
-          <div className="text-xl font-extrabold text-emerald-400 mt-1">
+        <div className="p-3.5 rounded-xl bg-white border border-[#E2DDD2] shadow-xs">
+          <span className="text-[11px] text-[#78716C] font-semibold uppercase tracking-wider">Unique Companies</span>
+          <div className="text-xl font-bold text-[#15803D] mt-1">
             {leads.filter((l) => !l.isDuplicate).length}
           </div>
         </div>
-        <div className="p-3.5 rounded-xl bg-[#121215] border border-white/10">
-          <span className="text-[11px] text-zinc-400 font-semibold uppercase">Duplicates Filtered</span>
-          <div className="text-xl font-extrabold text-amber-400 mt-1">
+        <div className="p-3.5 rounded-xl bg-white border border-[#E2DDD2] shadow-xs">
+          <span className="text-[11px] text-[#78716C] font-semibold uppercase tracking-wider">Duplicates Filtered</span>
+          <div className="text-xl font-bold text-[#B45309] mt-1">
             {leads.filter((l) => l.isDuplicate).length}
           </div>
         </div>
-        <div className="p-3.5 rounded-xl bg-[#121215] border border-white/10">
-          <span className="text-[11px] text-zinc-400 font-semibold uppercase">Enrichment Queue</span>
-          <div className="text-xl font-extrabold text-cyan-400 mt-1">
+        <div className="p-3.5 rounded-xl bg-white border border-[#E2DDD2] shadow-xs">
+          <span className="text-[11px] text-[#78716C] font-semibold uppercase tracking-wider">Enrichment Queue</span>
+          <div className="text-xl font-bold text-[#4F46E5] mt-1">
             {leads.filter((l) => l.status === 'DISCOVERED' || l.status === 'RESEARCHING').length}
           </div>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="p-3 rounded-xl bg-[#121215] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
         <div className="relative flex-1 max-w-sm">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search company, domain, phone, email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-[#18181c] border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
 
@@ -217,10 +217,10 @@ export default function RawLeadsManager() {
             <button
               key={s}
               onClick={() => setSourceFilter(s)}
-              className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
                 sourceFilter === s
-                  ? 'bg-blue-600 text-white'
-                  : 'text-zinc-400 hover:text-white bg-[#18181c]'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
               {s}
@@ -230,10 +230,10 @@ export default function RawLeadsManager() {
       </div>
 
       {/* Leads Table */}
-      <div className="rounded-xl bg-[#121215] border border-white/10 shadow-lg overflow-hidden">
+      <div className="rounded-xl bg-white border border-[#E2DDD2] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#18181c]/70 text-zinc-400 border-b border-white/10">
+            <thead className="bg-[#FAF8F5] text-[#57534E] border-b border-[#E2DDD2]">
               <tr>
                 <th className="py-3 px-4 font-semibold">Company Name</th>
                 <th className="py-3 px-4 font-semibold">Connector Source</th>
@@ -244,49 +244,51 @@ export default function RawLeadsManager() {
                 <th className="py-3 px-4 font-semibold text-right">Discovered</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#F5F2EB]">
               {filtered.map((lead) => (
-                <tr key={lead.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-3.5 px-4 font-semibold text-white">
+                <tr key={lead.id} className="hover:bg-[#FAF8F5] transition-colors">
+                  <td className="py-3.5 px-4 font-bold text-[#1C1917]">
                     {lead.companyName}
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[10px]">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#EAE6DC] text-[#44403C] text-[11px] font-medium border border-[#DDD7C9]">
                       {lead.source}
                     </span>
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className="font-mono text-[11px] text-blue-400">
+                    <span className="font-mono text-xs text-[#4F46E5] font-semibold">
                       {lead.domain}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-zinc-400">
+                  <td className="py-3.5 px-4 text-[#57534E]">
                     <div>{lead.phone}</div>
-                    <div className="text-[11px] text-zinc-500">{lead.email}</div>
+                    <div className="text-[11px] text-[#78716C]">{lead.email}</div>
                   </td>
                   <td className="py-3.5 px-4">
                     {lead.isDuplicate ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-semibold">
-                        <AlertCircle className="w-3 h-3" /> Duplicate Domain
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-semibold">
+                        <AlertCircle className="w-3.5 h-3.5" /> Duplicate Domain
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold">
-                        <CheckCircle2 className="w-3 h-3" /> Verified Unique
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Verified Unique
                       </span>
                     )}
                   </td>
                   <td className="py-3.5 px-4">
                     <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold ${
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                         lead.status === 'QUALIFIED'
-                          ? 'bg-blue-500/10 text-blue-400'
-                          : 'bg-zinc-800 text-zinc-400'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : lead.status === 'VALIDATED'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                       }`}
                     >
                       {lead.status}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-right text-zinc-500 text-[11px]">
+                  <td className="py-3.5 px-4 text-right text-[#78716C] text-xs">
                     {lead.discoveredAt}
                   </td>
                 </tr>

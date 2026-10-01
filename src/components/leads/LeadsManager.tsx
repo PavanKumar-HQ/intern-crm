@@ -16,6 +16,7 @@ import {
   Kanban,
   X,
   RefreshCw,
+  UserRoundPlus,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -136,41 +137,72 @@ export default function LeadsManager() {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'QUALIFIED':
-        return 'text-[#16A34A]';
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Qualified
+          </span>
+        );
       case 'OUTREACH_READY':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+            Outreach Ready
+          </span>
+        );
       case 'ENGAGED':
-        return 'text-[#4F46E5]';
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+            Engaged
+          </span>
+        );
       case 'VALIDATED':
-        return 'text-[#D97706]';
+      case 'RESEARCHING':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            {status === 'RESEARCHING' ? 'Researching' : 'Validated'}
+          </span>
+        );
+      case 'DISCOVERED':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+            Discovered
+          </span>
+        );
       default:
-        return 'text-[#71717A]';
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#EAE6DC] text-[#44403C] border border-[#DDD7C9]">
+            {status.replace('_', ' ')}
+          </span>
+        );
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Header: Leads */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-2 border-b border-[#EEEEEC]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#18181B]">Leads</h1>
-          <p className="text-xs text-[#71717A] mt-1">
-            Manage prospects, follow-ups, and pipeline advancement.
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <UserRoundPlus className="w-6 h-6 text-[#4F46E5]" />
+            Leads
+          </h1>
+          <p className="text-sm text-[#57534E] mt-1">
+            Manage prospects, stage progression, and pipeline conversion.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           {/* Table / Kanban Toggle */}
-          <div className="flex items-center bg-[#F4F4F5] p-0.5 rounded-md">
+          <div className="flex items-center bg-[#EAE6DC] p-1 rounded-lg border border-[#DDD7C9]">
             <button
               type="button"
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${
+              className={`px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-white text-[#18181B] font-medium shadow-2xs'
-                  : 'text-[#71717A] hover:text-[#18181B]'
+                  ? 'bg-white text-[#1C1917] shadow-xs'
+                  : 'text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               <LayoutList className="w-3.5 h-3.5" />
@@ -179,10 +211,10 @@ export default function LeadsManager() {
             <button
               type="button"
               onClick={() => setViewMode('kanban')}
-              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${
+              className={`px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 viewMode === 'kanban'
-                  ? 'bg-white text-[#18181B] font-medium shadow-2xs'
-                  : 'text-[#71717A] hover:text-[#18181B]'
+                  ? 'bg-white text-[#1C1917] shadow-xs'
+                  : 'text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               <Kanban className="w-3.5 h-3.5" />
@@ -193,26 +225,26 @@ export default function LeadsManager() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="btn-primary"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+            <Plus className="w-4 h-4 stroke-[2.2]" />
             <span>New Lead</span>
           </button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
         <div className="flex items-center gap-2 flex-wrap">
           {['ALL', 'DISCOVERED', 'VALIDATED', 'RESEARCHING', 'QUALIFIED', 'ENGAGED'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStageFilter(st)}
-              className={`text-xs px-2.5 py-1 rounded transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
                 stageFilter === st
-                  ? 'bg-[#18181B] text-white font-medium'
-                  : 'text-[#71717A] hover:text-[#18181B] hover:bg-[#F4F4F5]'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
               {st === 'ALL' ? 'All Leads' : st.replace('_', ' ')}
@@ -220,15 +252,15 @@ export default function LeadsManager() {
           ))}
         </div>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 text-[#A1A1AA] absolute left-3 top-1/2 -translate-y-1/2" />
+        <div className="relative">
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search leads..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchLeads()}
-            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-md bg-white border border-[#EEEEEC] text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:border-[#4F46E5]"
+            className="w-full sm:w-64 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -286,9 +318,7 @@ export default function LeadsManager() {
                           </div>
                         </td>
                         <td>
-                          <span className={`font-medium ${getStatusColor(lead.status)}`}>
-                            {lead.status.replace('_', ' ')}
-                          </span>
+                          {getStatusBadge(lead.status)}
                         </td>
                         <td className="text-[#52525B]">{lead.ownerName}</td>
                         <td className="font-mono text-xs font-medium text-[#18181B]">
@@ -310,28 +340,41 @@ export default function LeadsManager() {
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {['DISCOVERED', 'VALIDATED', 'QUALIFIED', 'ENGAGED'].map((col) => {
               const colLeads = leads.filter((l) => l.status === col);
+              const colColors: Record<string, { topBorder: string; dot: string }> = {
+                DISCOVERED: { topBorder: 'border-t-sky-500', dot: 'bg-sky-500' },
+                VALIDATED: { topBorder: 'border-t-amber-500', dot: 'bg-amber-500' },
+                QUALIFIED: { topBorder: 'border-t-indigo-600', dot: 'bg-indigo-600' },
+                ENGAGED: { topBorder: 'border-t-emerald-600', dot: 'bg-emerald-600' },
+              };
+              const meta = colColors[col] || { topBorder: 'border-t-stone-400', dot: 'bg-stone-400' };
+
               return (
-                <div key={col} className="bg-[#F7F7F6] p-3 rounded-lg space-y-2.5">
-                  <div className="flex items-center justify-between text-xs font-semibold text-[#52525B]">
-                    <span>{col.replace('_', ' ')}</span>
-                    <span className="text-[11px] text-[#A1A1AA]">{colLeads.length}</span>
+                <div key={col} className={`bg-[#FAF8F5] border border-[#E2DDD2] border-t-4 ${meta.topBorder} p-3.5 rounded-xl space-y-3 shadow-xs min-h-[420px]`}>
+                  <div className="flex items-center justify-between text-xs font-bold text-[#1C1917] pb-2 border-b border-[#EBE7DE]">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${meta.dot}`} />
+                      <span>{col.replace('_', ' ')}</span>
+                    </div>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#EAE6DC] text-[#44403C]">
+                      {colLeads.length}
+                    </span>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {colLeads.map((lead) => (
                       <div
                         key={lead.id}
                         onClick={() => setSelectedLead(lead)}
-                        className="p-3 bg-white border border-[#EEEEEC] rounded-md shadow-2xs hover:border-[#DCDCD9] cursor-pointer transition-colors"
+                        className="p-3.5 bg-white border border-[#E2DDD2] rounded-xl shadow-xs hover:border-[#4F46E5] cursor-pointer transition-all space-y-2"
                       >
-                        <div className="text-xs font-semibold text-[#18181B]">
+                        <div className="text-xs font-bold text-[#1C1917]">
                           {lead.companyName}
                         </div>
-                        <div className="text-[11px] text-[#71717A] mt-1">
+                        <div className="text-xs text-[#57534E]">
                           {lead.contactName} · {lead.ownerName}
                         </div>
-                        <div className="mt-2 flex items-center justify-between pt-2 border-t border-[#F4F4F2] text-[11px]">
-                          <span className="font-mono font-medium text-[#18181B]">{lead.estimatedValue}</span>
-                          <span className="text-[#4F46E5] font-medium">{lead.nextAction}</span>
+                        <div className="pt-2 border-t border-[#F5F2EB] flex items-center justify-between text-xs">
+                          <span className="font-mono font-bold text-[#1C1917]">{lead.estimatedValue}</span>
+                          <span className="text-[#4F46E5] font-semibold">{lead.nextAction}</span>
                         </div>
                       </div>
                     ))}
@@ -351,11 +394,12 @@ export default function LeadsManager() {
                 <h2 className="text-sm font-bold text-[#18181B]">
                   {selectedLead.companyName}
                 </h2>
-                <div className="text-xs text-[#71717A] mt-0.5">
-                  {selectedLead.contactName} · {selectedLead.ownerName} ·{' '}
-                  <span className={`font-semibold ${getStatusColor(selectedLead.status)}`}>
-                    {selectedLead.status.replace('_', ' ')}
-                  </span>
+                <div className="text-xs text-[#71717A] mt-1 flex items-center gap-1.5 flex-wrap">
+                  <span>{selectedLead.contactName}</span>
+                  <span>·</span>
+                  <span>{selectedLead.ownerName}</span>
+                  <span>·</span>
+                  {getStatusBadge(selectedLead.status)}
                 </div>
               </div>
               <button

@@ -191,52 +191,52 @@ export default function BillingInvoicesManager() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Receipt className="w-6 h-6 text-[#4F46E5]" />
             Invoices & Client Billing
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Operational billing ledger, GST tax items, real payments, and outstanding balances.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchInvoices}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
             title="Refresh Invoices"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsInvoiceModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Create Invoice
           </button>
         </div>
       </div>
 
       {/* Compact Financial Summary Strip (single line, low cognitive load) */}
-      <div className="flex items-center gap-3 py-2 px-3.5 rounded-md bg-[#FBFBFA] border border-[#EEEEEC] text-xs">
-        <span className="text-[#18181B] font-semibold">
+      <div className="flex items-center gap-3.5 py-2.5 px-4 rounded-xl bg-white border border-[#E2DDD2] text-sm flex-wrap shadow-xs">
+        <span className="text-[#1C1917] font-bold">
           ₹{(totalInvoiced / 100000).toFixed(2)}L invoiced
         </span>
-        <span className="text-[#A1A1AA]">·</span>
-        <span className="text-[#16A34A] font-semibold">
+        <span className="text-[#A8A29E]">·</span>
+        <span className="text-[#15803D] font-bold">
           ₹{(totalCollected / 100000).toFixed(2)}L collected
         </span>
-        <span className="text-[#A1A1AA]">·</span>
-        <span className="text-[#D97706] font-semibold">
+        <span className="text-[#A8A29E]">·</span>
+        <span className="text-[#B45309] font-bold">
           ₹{(totalOutstanding / 100000).toFixed(2)}L outstanding
         </span>
         {totalOverdue > 0 && (
           <>
-            <span className="text-[#A1A1AA]">·</span>
-            <span className="text-[#DC2626] font-semibold">
+            <span className="text-[#A8A29E]">·</span>
+            <span className="text-[#B91C1C] font-bold">
               ₹{(totalOverdue / 100000).toFixed(2)}L overdue
             </span>
           </>
@@ -244,17 +244,17 @@ export default function BillingInvoicesManager() {
       </div>
 
       {/* Filter and Control Bar */}
-      <div className="p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <div className="flex items-center gap-2 flex-wrap">
           {['ALL', 'ISSUED', 'PARTIAL', 'PAID', 'OVERDUE'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#171717] text-white'
-                  : 'bg-[#F7F7F5] hover:bg-[#E5E5E2] text-[#5E5E5E]'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
               {st}
@@ -263,13 +263,13 @@ export default function BillingInvoicesManager() {
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5E5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search invoice # or client..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#171717] placeholder-[#5E5E5E] focus:outline-none focus:border-[#6366F1]"
+            className="w-full sm:w-64 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>

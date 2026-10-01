@@ -36,13 +36,13 @@ interface DealItem {
 }
 
 const STAGES = [
-  { id: 'NEW', label: 'New', dot: 'bg-blue-500' },
-  { id: 'QUALIFIED', label: 'Qualified', dot: 'bg-cyan-500' },
-  { id: 'DISCOVERY', label: 'Discovery', dot: 'bg-indigo-500' },
-  { id: 'PROPOSAL', label: 'Proposal', dot: 'bg-amber-500' },
-  { id: 'NEGOTIATION', label: 'Negotiation', dot: 'bg-purple-500' },
-  { id: 'WON', label: 'Won', dot: 'bg-emerald-500' },
-  { id: 'LOST', label: 'Lost', dot: 'bg-rose-500' },
+  { id: 'NEW', label: 'New', dot: 'bg-sky-500', topBorder: 'border-t-sky-500' },
+  { id: 'QUALIFIED', label: 'Qualified', dot: 'bg-indigo-600', topBorder: 'border-t-indigo-600' },
+  { id: 'DISCOVERY', label: 'Discovery', dot: 'bg-amber-500', topBorder: 'border-t-amber-500' },
+  { id: 'PROPOSAL', label: 'Proposal', dot: 'bg-violet-600', topBorder: 'border-t-violet-600' },
+  { id: 'NEGOTIATION', label: 'Negotiation', dot: 'bg-orange-500', topBorder: 'border-t-orange-500' },
+  { id: 'WON', label: 'Won', dot: 'bg-emerald-600', topBorder: 'border-t-emerald-600' },
+  { id: 'LOST', label: 'Lost', dot: 'bg-rose-500', topBorder: 'border-t-rose-500' },
 ];
 
 export default function DealsPipelineManager() {
@@ -190,7 +190,7 @@ export default function DealsPipelineManager() {
       </div>
 
       {/* Financial Summary Strip */}
-      <div className="flex items-center gap-3.5 py-2.5 px-4 rounded-lg bg-[#FAF8F5] border border-[#E2DDD2] text-sm flex-wrap">
+      <div className="flex items-center gap-3.5 py-2.5 px-4 rounded-xl bg-white border border-[#E2DDD2] text-sm flex-wrap shadow-xs">
         <span className="text-[#1C1917] font-bold">
           ₹{(totalPipelineValue / 100000).toFixed(1)}L pipeline
         </span>
@@ -217,7 +217,7 @@ export default function DealsPipelineManager() {
           return (
             <div
               key={stage.id}
-              className="bg-[#FAF8F5] border border-[#E2DDD2] rounded-xl p-3.5 w-[310px] min-w-[310px] max-w-[310px] shrink-0 flex flex-col min-h-[520px]"
+              className={`bg-[#FAF8F5] border border-[#E2DDD2] border-t-4 ${stage.topBorder} rounded-xl p-3.5 w-[310px] min-w-[310px] max-w-[310px] shrink-0 flex flex-col min-h-[520px] shadow-xs`}
             >
               {/* Stage Header */}
               <div className="flex items-center justify-between pb-3 border-b border-[#EBE7DE] mb-3">
