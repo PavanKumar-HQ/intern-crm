@@ -14,6 +14,7 @@ import {
   X,
   User,
   ExternalLink,
+  Pencil,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -34,6 +35,7 @@ export default function ContactsManager() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingContact, setEditingContact] = useState<ContactItem | null>(null);
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,6 +45,14 @@ export default function ContactsManager() {
     email: '',
     phone: '',
     companyName: '',
+    isPrimary: false,
+  });
+
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    role: '',
+    email: '',
+    phone: '',
     isPrimary: false,
   });
 
@@ -106,6 +116,33 @@ export default function ContactsManager() {
       if (selectedContact?.id === id) setSelectedContact(null);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleUpdateContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingContact || !editFormData.name) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/contacts', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingContact.id,
+          name: editFormData.name,
+          role: editFormData.role || null,
+          email: editFormData.email || null,
+          phone: editFormData.phone || null,
+          isPrimary: editFormData.isPrimary,
+        }),
+      });
+      if (res.ok) {
+        setEditingContact(null);
+        await fetchContacts();
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -276,14 +313,33 @@ export default function ContactsManager() {
                           )}
                         </td>
                         <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(contact.id)}
-                            className="p-1.5 rounded-md hover:bg-[#FEE2E2] text-[#78716C] hover:text-[#B91C1C] transition-colors"
-                            title="Delete contact"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingContact(contact);
+                                setEditFormData({
+                                  name: contact.name,
+                                  role: contact.role || '',
+                                  email: contact.email || '',
+                                  phone: contact.phone || '',
+                                  isPrimary: contact.isPrimary,
+                                });
+                              }}
+                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#1C1917] hover:bg-[#F3EFE7] transition-colors"
+                              title="Edit contact"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(contact.id)}
+                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                              title="Delete contact"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -296,48 +352,76 @@ export default function ContactsManager() {
 
         {/* Right-side Detail Inspection Panel */}
         {selectedContact && (
-          <div className="w-[320px] bg-white border border-[#E5E5E2] rounded-xl p-4 shadow-xs space-y-4 shrink-0">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E2]">
-              <h3 className="text-xs font-bold text-[#171717] uppercase tracking-wider">
+          <div className="w-[320px] bg-white border border-[#E2DDD2] rounded-xl p-4 shadow-xs space-y-4 shrink-0">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2DDD2]">
+              <h3 className="text-xs font-bold text-[#1C1917] uppercase tracking-wider">
                 Contact Profile
               </h3>
               <button
                 type="button"
                 onClick={() => setSelectedContact(null)}
-                className="text-[#5E5E5E] hover:text-[#171717]"
+                className="text-[#78716C] hover:text-[#1C1917]"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div>
-              <div className="text-sm font-bold text-[#171717]">
+              <div className="text-base font-bold text-[#1C1917]">
                 {selectedContact.name}
               </div>
-              <div className="text-xs text-[#5E5E5E] mt-0.5">
+              <div className="text-xs text-[#57534E] mt-0.5">
                 {selectedContact.role || 'Executive'} · {selectedContact.company?.primaryName || 'Independent'}
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-xs space-y-2">
-              <div className="flex items-center gap-2 text-[#5E5E5E]">
-                <Mail className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
-                <span className="text-[#171717] truncate">{selectedContact.email || 'No email registered'}</span>
+            <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#E2DDD2] text-xs space-y-2">
+              <div className="flex items-center gap-2 text-[#57534E]">
+                <Mail className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
+                <span className="text-[#1C1917] truncate">{selectedContact.email || 'No email registered'}</span>
               </div>
-              <div className="flex items-center gap-2 text-[#5E5E5E]">
-                <Phone className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
-                <span className="text-[#171717]">{selectedContact.phone || 'No phone registered'}</span>
+              <div className="flex items-center gap-2 text-[#57534E]">
+                <Phone className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
+                <span className="text-[#1C1917]">{selectedContact.phone || 'No phone registered'}</span>
               </div>
-              <div className="flex items-center gap-2 text-[#5E5E5E]">
-                <Building2 className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
-                <span className="text-[#171717]">{selectedContact.company?.primaryName || 'No company account'}</span>
+              <div className="flex items-center gap-2 text-[#57534E]">
+                <Building2 className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
+                <span className="text-[#1C1917]">{selectedContact.company?.primaryName || 'No company account'}</span>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[#E5E5E2]">
+            <div className="pt-2 border-t border-[#E2DDD2] space-y-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingContact(selectedContact);
+                    setEditFormData({
+                      name: selectedContact.name,
+                      role: selectedContact.role || '',
+                      email: selectedContact.email || '',
+                      phone: selectedContact.phone || '',
+                      isPrimary: selectedContact.isPrimary,
+                    });
+                  }}
+                  className="btn-action text-xs flex-1 flex items-center justify-center gap-1.5"
+                >
+                  <Pencil className="w-3 h-3 text-[#4F46E5]" />
+                  <span>Edit Profile</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(selectedContact.id)}
+                  className="p-2 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                  title="Delete contact"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+
               <a
                 href={selectedContact.email ? `mailto:${selectedContact.email}` : '#'}
-                className="w-full py-2 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                className="btn-primary text-xs py-2 w-full flex items-center justify-center gap-1.5 cursor-pointer text-center"
               >
                 <Mail className="w-3.5 h-3.5" />
                 Initiate Direct Email
@@ -461,6 +545,110 @@ export default function ContactsManager() {
                   className="px-3.5 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-xs font-semibold text-white shadow-xs cursor-pointer"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Contact'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Contact Modal */}
+      {editingContact && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white border border-[#E2DDD2] rounded-xl p-5 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2DDD2]">
+              <h2 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
+                <Pencil className="w-4 h-4 text-[#4F46E5]" />
+                Edit Contact Profile
+              </h2>
+              <button
+                type="button"
+                onClick={() => setEditingContact(null)}
+                className="text-[#78716C] hover:text-[#1C1917]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateContact} className="space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  Role / Title
+                </label>
+                <input
+                  type="text"
+                  value={editFormData.role}
+                  onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                  placeholder="e.g. Chief Technology Officer"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editFormData.email}
+                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.phone}
+                    onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="editIsPrimary"
+                  checked={editFormData.isPrimary}
+                  onChange={(e) => setEditFormData({ ...editFormData, isPrimary: e.target.checked })}
+                  className="rounded border-[#E2DDD2] text-[#4F46E5] focus:ring-0"
+                />
+                <label htmlFor="editIsPrimary" className="text-xs text-[#1C1917]">
+                  Primary decision maker for this account
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#E2DDD2]">
+                <button
+                  type="button"
+                  onClick={() => setEditingContact(null)}
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-xs text-[#57534E] hover:text-[#1C1917] font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary text-xs py-1.5 px-3.5"
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>

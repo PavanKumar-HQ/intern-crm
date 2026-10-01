@@ -110,6 +110,48 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PATCH(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'update', 'leads');
+
+    const body = await request.json();
+    const { id, name, role, email, phone, isPrimary } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Contact id is required' }, { status: 400 });
+    }
+
+    let updated: any = null;
+    try {
+      updated = await prisma.contact.update({
+        where: { id },
+        data: {
+          ...(name && { name }),
+          ...(role !== undefined && { role }),
+          ...(email !== undefined && { email }),
+          ...(phone !== undefined && { phone }),
+          ...(isPrimary !== undefined && { isPrimary }),
+        },
+      });
+    } catch {
+      const target = devStore.contacts.find((c) => c.id === id);
+      if (target) {
+        if (name) target.name = name;
+        if (role !== undefined) target.role = role;
+        if (email !== undefined) target.email = email;
+        if (phone !== undefined) target.phone = phone;
+        if (isPrimary !== undefined) target.isPrimary = isPrimary;
+        updated = target;
+      }
+    }
+
+    return NextResponse.json({ success: true, contact: updated });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const user = await getServerUser(request);

@@ -175,3 +175,25 @@ export async function PATCH(request: NextRequest) {
     return handleAuthError(error);
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'delete', 'invoices');
+
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Invoice id is required' }, { status: 400 });
+    }
+
+    try {
+      await prisma.invoice.delete({ where: { id } });
+    } catch {
+      devStore.invoices = devStore.invoices.filter((i) => i.id !== id);
+    }
+
+    return NextResponse.json({ success: true, deletedId: id });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}

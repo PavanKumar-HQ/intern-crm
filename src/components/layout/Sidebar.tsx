@@ -112,20 +112,23 @@ export default function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
                       isActive
-                        ? 'bg-[#E5E0F8] text-[#4F46E5] font-semibold shadow-xs'
-                        : 'text-[#44403C] hover:text-[#1C1917] hover:bg-[#E8E4DA] font-medium'
+                        ? 'bg-[#1C1917] text-white font-bold shadow-xs'
+                        : 'text-[#44403C] hover:text-[#1C1917] hover:bg-[#E2DDD2] font-medium'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Icon
                         className={`w-4 h-4 shrink-0 ${
-                          isActive ? 'text-[#4F46E5]' : 'text-[#78716C]'
+                          isActive ? 'text-[#818CF8]' : 'text-[#78716C]'
                         }`}
                       />
                       <span className="truncate">{item.label}</span>
                     </div>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#818CF8] shrink-0" />
+                    )}
                   </Link>
                 );
               })}

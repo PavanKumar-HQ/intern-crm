@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Calendar as CalendarIcon,
   Plus,
@@ -222,7 +223,7 @@ export default function CalendarManager() {
                   key={`${evt.type}-${evt.id}`}
                   className="p-4 rounded-xl bg-white border border-[#E2DDD2] hover:border-[#4F46E5] hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
-                  <div className="flex items-start gap-3.5">
+                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
                         isMeeting
@@ -236,11 +237,11 @@ export default function CalendarManager() {
                         <CheckSquare className="w-5 h-5" />
                       )}
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-sm text-[#1C1917]">{evt.title}</span>
+                        <span className="font-bold text-sm text-[#1C1917] break-words">{evt.title}</span>
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${
                             isMeeting
                               ? 'bg-purple-50 text-purple-700 border border-purple-300'
                               : 'bg-amber-50 text-amber-700 border border-amber-300'
@@ -250,25 +251,46 @@ export default function CalendarManager() {
                         </span>
                       </div>
                       {evt.companyName && (
-                        <div className="flex items-center gap-1.5 text-xs text-[#57534E] mt-1">
-                          <Building2 className="w-3.5 h-3.5 text-[#78716C]" />
+                        <div className="flex items-center gap-1.5 text-xs text-[#57534E] mt-1 font-medium">
+                          <Building2 className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
                           <span>{evt.companyName}</span>
                         </div>
                       )}
                       {evt.description && (
-                        <p className="text-xs text-[#78716C] mt-1 line-clamp-1 italic">
+                        <p className="text-xs text-[#78716C] mt-1 italic break-words">
                           &ldquo;{evt.description}&rdquo;
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 sm:flex-col sm:items-end text-xs shrink-0 font-medium">
-                    <span className="font-bold text-sm text-[#1C1917]">{dateFormatted}</span>
-                    <span className="text-[#57534E] flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-[#78716C]" />
-                      {timeFormatted}
-                    </span>
+                  <div className="flex items-center gap-3 sm:flex-col sm:items-end text-xs shrink-0 font-medium self-end sm:self-auto">
+                    <div className="text-right">
+                      <div className="font-bold text-sm text-[#1C1917]">{dateFormatted}</div>
+                      <div className="text-[#57534E] flex items-center justify-end gap-1 mt-0.5">
+                        <Clock className="w-3.5 h-3.5 text-[#78716C]" />
+                        <span>{timeFormatted}</span>
+                      </div>
+                    </div>
+                    {isMeeting ? (
+                      <a
+                        href="https://meet.google.com/new"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-action text-xs"
+                      >
+                        <Video className="w-3 h-3 text-[#4F46E5]" />
+                        <span>Join Call</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href="/tasks"
+                        className="btn-action text-xs"
+                      >
+                        <CheckSquare className="w-3 h-3 text-[#059669]" />
+                        <span>Open Task</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               );

@@ -488,16 +488,26 @@ export default function EnquiriesManager() {
                 ))}
               </select>
 
-              {selectedEnquiry.status !== 'CONVERTED' && (
+              <div className="flex items-center gap-2 pt-2">
+                {selectedEnquiry.status !== 'CONVERTED' && (
+                  <button
+                    type="button"
+                    onClick={() => handleConvertToLead(selectedEnquiry.id)}
+                    className="flex-1 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" />
+                    Convert to CRM Lead
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => handleConvertToLead(selectedEnquiry.id)}
-                  className="w-full mt-2 py-2 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                  onClick={() => handleDelete(selectedEnquiry.id)}
+                  className="p-2 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
+                  title="Delete enquiry"
                 >
-                  <ArrowRight className="w-3.5 h-3.5" />
-                  Convert to CRM Lead
+                  <Trash2 className="w-4 h-4" />
                 </button>
-              )}
+              </div>
             </div>
           </div>
         )}

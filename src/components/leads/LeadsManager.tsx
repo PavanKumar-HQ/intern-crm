@@ -17,6 +17,8 @@ import {
   X,
   RefreshCw,
   UserRoundPlus,
+  GripVertical,
+  Trash2,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -48,6 +50,8 @@ export default function LeadsManager() {
   const [selectedLead, setSelectedLead] = useState<LeadItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
+  const [dropTargetCol, setDropTargetCol] = useState<string | null>(null);
 
   // New lead form state
   const [companyName, setCompanyName] = useState('');
@@ -55,6 +59,75 @@ export default function LeadsManager() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [industry, setIndustry] = useState('');
+
+  const handleUpdateLeadStatus = async (leadId: string, newStatus: string) => {
+    // Optimistic update
+    setLeads((prev) =>
+      prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
+    );
+    if (selectedLead?.id === leadId) {
+      setSelectedLead((prev) => (prev ? { ...prev, status: newStatus } : null));
+    }
+
+    try {
+      await fetch('/api/leads', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: leadId, status: newStatus }),
+      });
+      fetchLeads();
+    } catch {
+      fetchLeads();
+    }
+  };
+
+  const handleDeleteLead = async (leadId: string) => {
+    if (!confirm('Are you sure you want to delete this lead?')) return;
+    try {
+      await fetch('/api/leads', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: leadId }),
+      });
+      setLeads((prev) => prev.filter((l) => l.id !== leadId));
+      if (selectedLead?.id === leadId) setSelectedLead(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedLeadId(id);
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, col: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dropTargetCol !== col) {
+      setDropTargetCol(col);
+    }
+  };
+
+  const handleDragLeave = (col: string) => {
+    if (dropTargetCol === col) {
+      setDropTargetCol(null);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetCol: string) => {
+    e.preventDefault();
+    setDropTargetCol(null);
+    const leadId = e.dataTransfer.getData('text/plain') || draggedLeadId;
+    if (!leadId) return;
+
+    const lead = leads.find((l) => l.id === leadId);
+    if (!lead || lead.status === targetCol) return;
+
+    await handleUpdateLeadStatus(leadId, targetCol);
+    setDraggedLeadId(null);
+  };
 
   const fetchLeads = async () => {
     try {
@@ -324,9 +397,18 @@ export default function LeadsManager() {
                         <td className="font-mono text-xs font-medium text-[#18181B]">
                           {lead.estimatedValue}
                         </td>
-                        <td className="text-[#71717A] text-[11px]">{lead.lastActivity}</td>
-                        <td className="text-right text-[#4F46E5] font-medium text-xs">
-                          {lead.nextAction}
+                        <td className="text-right">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedLead(lead);
+                            }}
+                            className="btn-action text-xs"
+                          >
+                            <span>{lead.nextAction}</span>
+                            <ArrowRight className="w-3 h-3 text-[#4F46E5]" />
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -347,9 +429,18 @@ export default function LeadsManager() {
                 ENGAGED: { topBorder: 'border-t-emerald-600', dot: 'bg-emerald-600' },
               };
               const meta = colColors[col] || { topBorder: 'border-t-stone-400', dot: 'bg-stone-400' };
+              const isOver = dropTargetCol === col;
 
               return (
-                <div key={col} className={`bg-[#FAF8F5] border border-[#E2DDD2] border-t-4 ${meta.topBorder} p-3.5 rounded-xl space-y-3 shadow-xs min-h-[420px]`}>
+                <div
+                  key={col}
+                  onDragOver={(e) => handleDragOver(e, col)}
+                  onDragLeave={() => handleDragLeave(col)}
+                  onDrop={(e) => handleDrop(e, col)}
+                  className={`bg-[#FAF8F5] border border-[#E2DDD2] border-t-4 ${meta.topBorder} p-3.5 rounded-xl space-y-3 shadow-xs min-h-[440px] transition-colors ${
+                    isOver ? 'border-2 border-dashed border-[#4F46E5] bg-[#EEF2FF]/60' : ''
+                  }`}
+                >
                   <div className="flex items-center justify-between text-xs font-bold text-[#1C1917] pb-2 border-b border-[#EBE7DE]">
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${meta.dot}`} />
@@ -360,24 +451,32 @@ export default function LeadsManager() {
                     </span>
                   </div>
                   <div className="space-y-2.5">
-                    {colLeads.map((lead) => (
-                      <div
-                        key={lead.id}
-                        onClick={() => setSelectedLead(lead)}
-                        className="p-3.5 bg-white border border-[#E2DDD2] rounded-xl shadow-xs hover:border-[#4F46E5] cursor-pointer transition-all space-y-2"
-                      >
-                        <div className="text-xs font-bold text-[#1C1917]">
-                          {lead.companyName}
+                    {colLeads.map((lead) => {
+                      const isDragging = draggedLeadId === lead.id;
+                      return (
+                        <div
+                          key={lead.id}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, lead.id)}
+                          onClick={() => setSelectedLead(lead)}
+                          className={`p-3.5 bg-white border border-[#E2DDD2] rounded-xl shadow-xs hover:border-[#4F46E5] cursor-grab active:cursor-grabbing transition-all space-y-2 select-none ${
+                            isDragging ? 'opacity-40 scale-95 border-dashed border-[#4F46E5]' : ''
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-xs font-bold text-[#1C1917] truncate">{lead.companyName}</span>
+                            <GripVertical className="w-3.5 h-3.5 text-[#A8A29E] shrink-0" />
+                          </div>
+                          <div className="text-xs text-[#57534E]">
+                            {lead.contactName} · {lead.ownerName}
+                          </div>
+                          <div className="pt-2 border-t border-[#F5F2EB] flex items-center justify-between text-xs">
+                            <span className="font-mono font-bold text-[#1C1917]">{lead.estimatedValue}</span>
+                            <span className="text-[#4F46E5] font-semibold">{lead.nextAction}</span>
+                          </div>
                         </div>
-                        <div className="text-xs text-[#57534E]">
-                          {lead.contactName} · {lead.ownerName}
-                        </div>
-                        <div className="pt-2 border-t border-[#F5F2EB] flex items-center justify-between text-xs">
-                          <span className="font-mono font-bold text-[#1C1917]">{lead.estimatedValue}</span>
-                          <span className="text-[#4F46E5] font-semibold">{lead.nextAction}</span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
@@ -387,14 +486,14 @@ export default function LeadsManager() {
 
         {/* Lead Detail Panel (Clean Editorial Specification) */}
         {selectedLead && (
-          <div className="w-[360px] bg-white border border-[#EEEEEC] rounded-lg p-5 space-y-5 shrink-0 shadow-sm animate-in fade-in duration-100">
+          <div className="w-[360px] bg-white border border-[#E2DDD2] rounded-xl p-5 space-y-5 shrink-0 shadow-sm animate-in fade-in duration-100">
             {/* Header: Lead Name & Quick Actions */}
-            <div className="flex items-start justify-between pb-3 border-b border-[#EEEEEC]">
+            <div className="flex items-start justify-between pb-3 border-b border-[#E2DDD2]">
               <div>
-                <h2 className="text-sm font-bold text-[#18181B]">
+                <h2 className="text-base font-bold text-[#1C1917]">
                   {selectedLead.companyName}
                 </h2>
-                <div className="text-xs text-[#71717A] mt-1 flex items-center gap-1.5 flex-wrap">
+                <div className="text-xs text-[#57534E] mt-1 flex items-center gap-1.5 flex-wrap">
                   <span>{selectedLead.contactName}</span>
                   <span>·</span>
                   <span>{selectedLead.ownerName}</span>
@@ -405,7 +504,7 @@ export default function LeadsManager() {
               <button
                 type="button"
                 onClick={() => setSelectedLead(null)}
-                className="text-[#A1A1AA] hover:text-[#18181B]"
+                className="text-[#78716C] hover:text-[#1C1917] p-1 rounded-md"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -416,35 +515,57 @@ export default function LeadsManager() {
               <button
                 type="button"
                 onClick={() => handleConvertToDeal(selectedLead)}
-                className="btn-primary text-xs"
+                className="btn-primary text-xs py-2 px-3 flex-1 flex items-center justify-center gap-1.5"
               >
                 <Handshake className="w-3.5 h-3.5" />
                 <span>Convert to Deal</span>
               </button>
-              <button type="button" className="btn-secondary text-xs">
-                <span>Add Task</span>
+              <button
+                type="button"
+                onClick={() => handleDeleteLead(selectedLead.id)}
+                className="p-2 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                title="Delete lead"
+              >
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
 
+            {/* Update Stage Selector */}
+            <div className="space-y-1.5 pt-2 border-t border-[#F5F2EB]">
+              <label className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">
+                Update Lead Stage
+              </label>
+              <select
+                value={selectedLead.status}
+                onChange={(e) => handleUpdateLeadStatus(selectedLead.id, e.target.value)}
+                className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] font-semibold focus:outline-none focus:border-[#4F46E5]"
+              >
+                <option value="DISCOVERED">Discovered</option>
+                <option value="VALIDATED">Validated</option>
+                <option value="QUALIFIED">Qualified</option>
+                <option value="ENGAGED">Engaged</option>
+              </select>
+            </div>
+
             {/* Contact Information */}
-            <div className="space-y-2">
-              <div className="section-label">Contact Information</div>
-              <div className="text-xs space-y-1.5 text-[#52525B]">
+            <div className="space-y-2 pt-2 border-t border-[#F5F2EB]">
+              <div className="text-xs font-bold text-[#78716C] uppercase tracking-wider">Contact Information</div>
+              <div className="text-xs space-y-1.5 text-[#57534E]">
                 <div className="flex items-center gap-2">
-                  <span className="text-[#A1A1AA] w-14">Name:</span>
-                  <span className="text-[#18181B] font-medium">{selectedLead.contactName}</span>
+                  <span className="text-[#78716C] w-14">Name:</span>
+                  <span className="text-[#1C1917] font-medium">{selectedLead.contactName}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#A1A1AA] w-14">Email:</span>
+                  <span className="text-[#78716C] w-14">Email:</span>
                   <span className="text-[#4F46E5] font-mono">{selectedLead.email || 'contact@domain.in'}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#A1A1AA] w-14">Phone:</span>
-                  <span className="text-[#18181B]">{selectedLead.phone || '+91 98401 22841'}</span>
+                  <span className="text-[#78716C] w-14">Phone:</span>
+                  <span className="text-[#1C1917]">{selectedLead.phone || '+91 98401 22841'}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#A1A1AA] w-14">Location:</span>
-                  <span className="text-[#18181B]">{selectedLead.city || 'Bengaluru, India'}</span>
+                  <span className="text-[#78716C] w-14">Location:</span>
+                  <span className="text-[#1C1917]">{selectedLead.city || 'Bengaluru, India'}</span>
                 </div>
               </div>
             </div>

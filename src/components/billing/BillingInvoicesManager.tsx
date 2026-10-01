@@ -16,6 +16,7 @@ import {
   X,
   ArrowUpRight,
   Filter,
+  Trash2,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -132,6 +133,21 @@ export default function BillingInvoicesManager() {
       }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteInvoice = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this invoice?')) return;
+    try {
+      await fetch('/api/invoices', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      setInvoices((prev) => prev.filter((i) => i.id !== id));
+      if (selectedInvoice?.id === id) setSelectedInvoice(null);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -343,25 +359,35 @@ export default function BillingInvoicesManager() {
                         {getStatusBadge(inv.status, inv.dueDate, inv.total, inv.paidAmount)}
                       </td>
                       <td className="py-3 px-4 text-right">
-                        {outstanding > 0 ? (
+                        <div className="flex items-center justify-end gap-2">
+                          {outstanding > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedInvoice(inv);
+                                setPayAmount(outstanding.toString());
+                                setIsPaymentModalOpen(true);
+                              }}
+                              className="btn-action-primary text-xs py-1 px-2.5"
+                            >
+                              <CreditCard className="w-3 h-3" />
+                              <span>Record Pay</span>
+                            </button>
+                          ) : (
+                            <span className="badge-emerald text-xs py-1 px-2.5 inline-flex items-center gap-1 font-semibold">
+                              <CheckCircle2 className="w-3 h-3" />
+                              Settled
+                            </span>
+                          )}
                           <button
                             type="button"
-                            onClick={() => {
-                              setSelectedInvoice(inv);
-                              setPayAmount(outstanding.toString());
-                              setIsPaymentModalOpen(true);
-                            }}
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded bg-[#F7F7F5] hover:bg-[#6366F1] hover:text-white text-[#171717] border border-[#E5E5E2] transition-colors cursor-pointer"
+                            onClick={() => handleDeleteInvoice(inv.id)}
+                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                            title="Delete invoice"
                           >
-                            <CreditCard className="w-3 h-3" />
-                            Record Pay
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
-                        ) : (
-                          <span className="text-[11px] text-[#16A34A] font-medium flex items-center justify-end gap-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Settled
-                          </span>
-                        )}
+                        </div>
                       </td>
                     </tr>
                   );

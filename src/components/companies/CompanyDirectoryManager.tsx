@@ -19,6 +19,7 @@ import {
   Handshake,
   FolderKanban,
   Receipt,
+  Trash2,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -109,6 +110,38 @@ export default function CompanyDirectoryManager() {
       }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateCompanyStatus = async (id: string, currentStatus: string) => {
+    setCompanies((prev) => prev.map((c) => (c.id === id ? { ...c, currentStatus } : c)));
+    if (selectedCompany?.id === id) {
+      setSelectedCompany((prev) => (prev ? { ...prev, currentStatus } : null));
+    }
+    try {
+      await fetch('/api/companies', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, currentStatus }),
+      });
+      fetchCompanies();
+    } catch {
+      fetchCompanies();
+    }
+  };
+
+  const handleDeleteCompany = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this company?')) return;
+    try {
+      await fetch('/api/companies', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      setCompanies((prev) => prev.filter((c) => c.id !== id));
+      if (selectedCompany?.id === id) setSelectedCompany(null);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -246,18 +279,19 @@ export default function CompanyDirectoryManager() {
                   <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Contacts</th>
                   <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Deals</th>
                   <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-center">Status</th>
+                  <th className="py-3.5 px-4 font-bold text-xs uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#EAE6DC]">
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
+                    <td colSpan={8} className="py-12 text-center text-[#78716C]">
                       Loading company directory...
                     </td>
                   </tr>
                 ) : filteredCompanies.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#78716C]">
+                    <td colSpan={8} className="py-12 text-center text-[#78716C]">
                       <Building2 className="w-8 h-8 text-[#78716C] mx-auto mb-2 opacity-50" />
                       <p className="font-bold text-[#1C1917]">No companies found</p>
                       <p className="text-xs text-[#78716C] mt-1">
@@ -312,6 +346,25 @@ export default function CompanyDirectoryManager() {
                         </td>
                         <td className="py-3.5 px-4 text-center">
                           {getCompanyStatusBadge(comp.currentStatus)}
+                        </td>
+                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedCompany(comp)}
+                              className="btn-action text-xs"
+                            >
+                              <span>Inspect</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCompany(comp.id)}
+                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                              title="Delete company"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -403,6 +456,34 @@ export default function CompanyDirectoryManager() {
                   <p className="text-[11px] text-[#5E5E5E] italic">No active deals registered.</p>
                 )}
               </div>
+            </div>
+
+            {/* Account Status & Actions */}
+            <div className="pt-3 border-t border-[#E2DDD2] space-y-2.5">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">
+                  Account Pipeline Status
+                </label>
+                <select
+                  value={selectedCompany.currentStatus}
+                  onChange={(e) => handleUpdateCompanyStatus(selectedCompany.id, e.target.value)}
+                  className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] font-semibold focus:outline-none focus:border-[#4F46E5]"
+                >
+                  <option value="DISCOVERED">Discovered</option>
+                  <option value="ENGAGED">Engaged</option>
+                  <option value="CLIENT">Active Client</option>
+                  <option value="INACTIVE">Inactive</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleDeleteCompany(selectedCompany.id)}
+                className="btn-secondary text-[#B91C1C] hover:bg-[#FEE2E2] text-xs py-2 w-full flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Company Account</span>
+              </button>
             </div>
           </div>
         )}

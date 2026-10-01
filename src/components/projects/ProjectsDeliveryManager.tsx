@@ -13,6 +13,7 @@ import {
   RefreshCw,
   X,
   Layers,
+  Trash2,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -83,6 +84,34 @@ export default function ProjectsDeliveryManager() {
       }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateProjectStatus = async (id: string, status: string, health: string) => {
+    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status, health } : p)));
+    try {
+      await fetch('/api/projects', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status, health }),
+      });
+      fetchProjects();
+    } catch {
+      fetchProjects();
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    try {
+      await fetch('/api/projects', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -188,6 +217,39 @@ export default function ProjectsDeliveryManager() {
               <div className="flex items-center justify-between text-xs text-[#78716C]">
                 <span>Manager: <strong className="text-[#1C1917] font-semibold">{proj.managerName || 'Brandex Team'}</strong></span>
                 <span className="font-semibold text-[#4F46E5]">{proj.deliverables?.length || proj.deliverablesCount || 0} Deliverables</span>
+              </div>
+
+              <div className="pt-2 border-t border-[#F5F2EB] flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 flex-1">
+                  <select
+                    value={proj.status}
+                    onChange={(e) => handleUpdateProjectStatus(proj.id, e.target.value, proj.health || 'ON_TRACK')}
+                    className="text-xs px-2 py-1 rounded-md bg-[#FAF8F5] border border-[#E2DDD2] text-[#1C1917] font-medium focus:outline-none focus:border-[#4F46E5]"
+                  >
+                    <option value="PLANNING">Planning</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="MILESTONE_REVIEW">Milestone Review</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="ON_HOLD">On Hold</option>
+                  </select>
+                  <select
+                    value={proj.health || 'ON_TRACK'}
+                    onChange={(e) => handleUpdateProjectStatus(proj.id, proj.status, e.target.value)}
+                    className="text-xs px-2 py-1 rounded-md bg-[#FAF8F5] border border-[#E2DDD2] text-[#1C1917] font-medium focus:outline-none focus:border-[#4F46E5]"
+                  >
+                    <option value="ON_TRACK">On Track</option>
+                    <option value="AT_RISK">At Risk</option>
+                    <option value="CRITICAL">Critical</option>
+                  </select>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteProject(proj.id)}
+                  className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                  title="Delete project"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
           </div>

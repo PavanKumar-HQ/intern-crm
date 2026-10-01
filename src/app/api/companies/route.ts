@@ -133,3 +133,64 @@ export async function POST(request: NextRequest) {
     return handleAuthError(error);
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'update', 'leads');
+
+    const body = await request.json();
+    const { id, primaryName, city, industry, currentStatus } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Company id is required' }, { status: 400 });
+    }
+
+    let updated: any = null;
+    try {
+      updated = await prisma.company.update({
+        where: { id },
+        data: {
+          ...(primaryName && { primaryName }),
+          ...(city !== undefined && { city }),
+          ...(industry !== undefined && { industry }),
+          ...(currentStatus && { currentStatus }),
+        },
+      });
+    } catch {
+      const target = devStore.companies.find((c: any) => c.id === id);
+      if (target) {
+        if (primaryName) target.primaryName = primaryName;
+        if (city !== undefined) target.city = city;
+        if (industry !== undefined) target.industry = industry;
+        if (currentStatus) target.currentStatus = currentStatus;
+        updated = target;
+      }
+    }
+
+    return NextResponse.json({ success: true, company: updated });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'delete', 'leads');
+
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Company id is required' }, { status: 400 });
+    }
+
+    try {
+      await prisma.company.delete({ where: { id } });
+    } catch {
+      devStore.companies = devStore.companies.filter((c: any) => c.id !== id);
+    }
+    return NextResponse.json({ success: true, deletedId: id });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}

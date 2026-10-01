@@ -142,3 +142,25 @@ export async function PATCH(request: NextRequest) {
     return handleAuthError(error);
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'delete', 'projects');
+
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Project id is required' }, { status: 400 });
+    }
+
+    try {
+      await prisma.project.delete({ where: { id } });
+    } catch {
+      devStore.projects = devStore.projects.filter((p) => p.id !== id);
+    }
+
+    return NextResponse.json({ success: true, deletedId: id });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}

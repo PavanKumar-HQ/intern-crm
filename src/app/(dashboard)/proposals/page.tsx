@@ -13,6 +13,7 @@ import {
   Clock,
   Send,
   X,
+  Trash2,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -32,6 +33,7 @@ export default function ProposalsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewingProposal, setViewingProposal] = useState<ProposalItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
@@ -55,6 +57,38 @@ export default function ProposalsPage() {
   useEffect(() => {
     fetchProposals();
   }, [notifications]);
+
+  const handleUpdateProposalStatus = async (id: string, status: ProposalItem['status']) => {
+    setProposals((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
+    if (viewingProposal?.id === id) {
+      setViewingProposal((prev) => (prev ? { ...prev, status } : null));
+    }
+    try {
+      await fetch('/api/proposals', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      fetchProposals();
+    } catch {
+      fetchProposals();
+    }
+  };
+
+  const handleDeleteProposal = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this proposal?')) return;
+    try {
+      await fetch('/api/proposals', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      setProposals((prev) => prev.filter((p) => p.id !== id));
+      if (viewingProposal?.id === id) setViewingProposal(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -208,9 +242,36 @@ export default function ProposalsPage() {
                       {new Date(p.validUntil).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <span className="text-xs text-[#4F46E5] font-semibold cursor-pointer hover:underline">
-                        View SOW
-                      </span>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setViewingProposal(p)}
+                          className="btn-action text-xs"
+                          title="View Statement of Work"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-[#4F46E5]" />
+                          <span>View SOW</span>
+                        </button>
+                        <select
+                          value={p.status}
+                          onChange={(e) => handleUpdateProposalStatus(p.id, e.target.value as any)}
+                          className="text-xs px-2 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] font-semibold cursor-pointer focus:outline-none focus:border-[#4F46E5]"
+                        >
+                          <option value="DRAFT">Draft</option>
+                          <option value="INTERNAL_REVIEW">Review</option>
+                          <option value="SENT">Sent</option>
+                          <option value="ACCEPTED">Accept</option>
+                          <option value="REJECTED">Decline</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteProposal(p.id)}
+                          className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                          title="Delete proposal"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -299,6 +360,110 @@ export default function ProposalsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Statement of Work (SOW) Viewer Modal */}
+      {viewingProposal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-2xl bg-white border border-[#E2DDD2] rounded-xl p-6 shadow-xl space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E2DDD2]">
+              <div>
+                <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#EAE6DC] text-[#44403C]">
+                  Statement of Work · SOW
+                </span>
+                <h2 className="text-lg font-bold text-[#1C1917] mt-1.5">
+                  {viewingProposal.title}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setViewingProposal(null)}
+                className="text-[#78716C] hover:text-[#1C1917] p-1.5 rounded-md"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2]">
+              <div>
+                <span className="text-xs text-[#78716C] font-semibold block">Client Account</span>
+                <span className="text-sm font-bold text-[#1C1917]">{viewingProposal.clientName}</span>
+              </div>
+              <div>
+                <span className="text-xs text-[#78716C] font-semibold block">Proposal Value</span>
+                <span className="text-sm font-mono font-bold text-[#1C1917]">₹{viewingProposal.value.toLocaleString('en-IN')}</span>
+              </div>
+              <div>
+                <span className="text-xs text-[#78716C] font-semibold block">Validity Window</span>
+                <span className="text-xs font-semibold text-[#57534E]">
+                  {new Date(viewingProposal.validUntil).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
+              </div>
+              <div>
+                <span className="text-xs text-[#78716C] font-semibold block">Commercial Status</span>
+                <span className="mt-0.5 inline-block">{getStatusBadge(viewingProposal.status)}</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold text-[#78716C] uppercase tracking-wider">
+                Milestone Deliverables & Scope
+              </h3>
+              <div className="space-y-2 text-xs text-[#44403C]">
+                <div className="p-3 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] flex items-center justify-between">
+                  <div>
+                    <strong className="text-[#1C1917] block">Phase 1: Architecture, Scoping & System Modeling</strong>
+                    <span className="text-[#78716C]">Discovery sessions, stakeholder interviews, technical schema definition</span>
+                  </div>
+                  <span className="font-mono font-bold text-[#1C1917]">40% Milestone</span>
+                </div>
+                <div className="p-3 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] flex items-center justify-between">
+                  <div>
+                    <strong className="text-[#1C1917] block">Phase 2: Core Engineering, Integration & UAT Deployment</strong>
+                    <span className="text-[#78716C]">Full buildout, API connectors, migration scripting, staging environment</span>
+                  </div>
+                  <span className="font-mono font-bold text-[#1C1917]">40% Milestone</span>
+                </div>
+                <div className="p-3 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] flex items-center justify-between">
+                  <div>
+                    <strong className="text-[#1C1917] block">Phase 3: Production Handover & Hypercare Support</strong>
+                    <span className="text-[#78716C]">Operator enablement, security audit sign-off, live monitoring SLA</span>
+                  </div>
+                  <span className="font-mono font-bold text-[#1C1917]">20% Milestone</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-[#E2DDD2]">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleUpdateProposalStatus(viewingProposal.id, 'ACCEPTED')}
+                  className="btn-primary text-xs py-2 px-4 shadow-sm"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Mark Accepted
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateProposalStatus(viewingProposal.id, 'SENT')}
+                  className="btn-secondary text-xs py-2 px-3"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  Dispatch Copy
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setViewingProposal(null)}
+                className="btn-secondary text-xs py-2 px-4"
+              >
+                Close SOW
+              </button>
+            </div>
           </div>
         </div>
       )}

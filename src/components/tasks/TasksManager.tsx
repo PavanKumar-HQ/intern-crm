@@ -15,6 +15,7 @@ import {
   Search,
   X,
   Check,
+  Pencil,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -112,6 +113,42 @@ export default function TasksManager() {
       fetchTasks();
     } catch {
       fetchTasks();
+    }
+  };
+
+  const [editingTask, setEditingTask] = useState<TaskItem | null>(null);
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    description: '',
+    dueDate: '',
+    priority: 'MEDIUM',
+    category: 'FOLLOW_UP',
+  });
+
+  const handleUpdateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTask || !editFormData.title) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingTask.id,
+          title: editFormData.title,
+          description: editFormData.description || null,
+          dueDate: editFormData.dueDate || null,
+          priority: editFormData.priority,
+          category: editFormData.category,
+        }),
+      });
+      if (res.ok) {
+        setEditingTask(null);
+        await fetchTasks();
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -398,14 +435,41 @@ export default function TasksManager() {
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteTask(task.id)}
-                          className="p-1.5 rounded-md hover:bg-[#FEE2E2] text-[#78716C] hover:text-[#B91C1C] transition-colors"
-                          title="Delete task"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleStatus(task)}
+                            className={isDone ? "btn-action text-xs py-1 px-2.5" : "btn-action-primary text-xs py-1 px-2.5"}
+                            title={isDone ? "Mark as pending" : "Mark as completed"}
+                          >
+                            {isDone ? 'Reopen' : 'Done'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingTask(task);
+                              setEditFormData({
+                                title: task.title,
+                                description: task.description || '',
+                                dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
+                                priority: task.priority || 'MEDIUM',
+                                category: task.category || 'FOLLOW_UP',
+                              });
+                            }}
+                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#1C1917] hover:bg-[#F3EFE7] transition-colors"
+                            title="Edit task"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteTask(task.id)}
+                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                            title="Delete task"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -523,6 +587,118 @@ export default function TasksManager() {
                   className="px-3.5 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-xs font-semibold text-white shadow-xs cursor-pointer"
                 >
                   {isSubmitting ? 'Creating...' : 'Create Task'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Task Modal */}
+      {editingTask && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E2]">
+              <h2 className="text-sm font-bold text-[#171717] flex items-center gap-2">
+                <Pencil className="w-4 h-4 text-[#4F46E5]" />
+                Edit Task
+              </h2>
+              <button
+                type="button"
+                onClick={() => setEditingTask(null)}
+                className="text-[#5E5E5E] hover:text-[#171717]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateTask} className="space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-[#171717] block mb-1">
+                  Task Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.title}
+                  onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#4F46E5]"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#171717] block mb-1">
+                  Description / Context
+                </label>
+                <textarea
+                  rows={2}
+                  value={editFormData.description}
+                  onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#4F46E5]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-[#171717] block mb-1">
+                    Priority
+                  </label>
+                  <select
+                    value={editFormData.priority}
+                    onChange={(e) => setEditFormData({ ...editFormData, priority: e.target.value })}
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#4F46E5]"
+                  >
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="URGENT">Urgent</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-[#171717] block mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editFormData.category}
+                    onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#4F46E5]"
+                  >
+                    <option value="FOLLOW_UP">Follow Up</option>
+                    <option value="DELIVERABLE">Deliverable</option>
+                    <option value="MEETING">Meeting</option>
+                    <option value="CONTRACT">Contract</option>
+                    <option value="INVOICE">Invoice</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#171717] block mb-1">
+                  Due Date
+                </label>
+                <input
+                  type="date"
+                  value={editFormData.dueDate}
+                  onChange={(e) => setEditFormData({ ...editFormData, dueDate: e.target.value })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#4F46E5]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#E5E5E2]">
+                <button
+                  type="button"
+                  onClick={() => setEditingTask(null)}
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-xs text-[#5E5E5E] hover:text-[#171717] font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary text-xs py-1.5 px-3.5"
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>

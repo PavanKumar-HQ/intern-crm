@@ -72,3 +72,51 @@ export async function POST(request: NextRequest) {
     return handleAuthError(error);
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'update', 'deals');
+
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Proposal id is required' }, { status: 400 });
+    }
+
+    const target = devStore.proposals.find((p) => p.id === id);
+    if (target && status) {
+      target.status = status;
+    }
+
+    await dispatchRealtimeEvent({
+      type: 'system',
+      title: 'Proposal Status Updated',
+      message: `Proposal "${target?.title || id}" transitioned to ${status}.`,
+      priority: 'normal',
+      link: '/proposals',
+    });
+
+    return NextResponse.json({ success: true, proposal: target });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = await getServerUser(request);
+    authorizeAction(user, 'delete', 'deals');
+
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Proposal id is required' }, { status: 400 });
+    }
+
+    devStore.proposals = devStore.proposals.filter((p) => p.id !== id);
+    return NextResponse.json({ success: true, deletedId: id });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}
