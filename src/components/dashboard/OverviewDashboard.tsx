@@ -116,10 +116,10 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
       {/* 1. Header & Priority Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-2 border-b border-[#EEEEEC]">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#18181B]">
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917]">
             Good morning, Pavan
           </h1>
-          <p className="text-xs text-[#71717A] mt-1">
+          <p className="text-sm text-[#57534E] mt-1">
             Here&apos;s what needs attention today across sales, clients, and operations.
           </p>
         </div>
@@ -129,14 +129,14 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
             type="button"
             onClick={fetchLiveMetrics}
             disabled={loading}
-            className="btn-secondary"
+            className="btn-secondary text-sm py-2 px-3.5"
             title="Refresh database state"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-[#71717A] ${loading ? 'animate-spin text-[#4F46E5]' : ''}`} />
+            <RefreshCw className={`w-4 h-4 text-[#78716C] ${loading ? 'animate-spin text-[#4F46E5]' : ''}`} />
             <span>Sync</span>
           </button>
-          <Link href="/deals" className="btn-primary">
-            <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+          <Link href="/deals" className="btn-primary text-sm py-2 px-4">
+            <Plus className="w-4 h-4 stroke-[2.2]" />
             <span>New Opportunity</span>
           </Link>
         </div>
@@ -145,49 +145,49 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
       {/* 2. Today Workspace — Clean Interactive Rows */}
       <div>
         <div className="section-label mb-3">Today</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           <Link href="/tasks" className="today-row group">
             <div className="flex items-center gap-3">
               <Clock className="w-4 h-4 text-[#4F46E5] shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-[#18181B]">Follow-ups</div>
-                <div className="text-[11px] text-[#71717A]">3 due today</div>
+                <div className="text-sm font-bold text-[#1C1917]">Follow-ups</div>
+                <div className="text-xs text-[#57534E]">3 due today</div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#A1A1AA] group-hover:text-[#18181B] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#A8A29E] group-hover:text-[#1C1917] group-hover:translate-x-0.5 transition-all" />
           </Link>
 
           <Link href="/enquiries" className="today-row group">
             <div className="flex items-center gap-3">
-              <Inbox className="w-4 h-4 text-[#16A34A] shrink-0" />
+              <Inbox className="w-4 h-4 text-[#15803D] shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-[#18181B]">New enquiries</div>
-                <div className="text-[11px] text-[#71717A]">{enquiryCount} awaiting review</div>
+                <div className="text-sm font-bold text-[#1C1917]">New enquiries</div>
+                <div className="text-xs text-[#57534E]">{enquiryCount} awaiting review</div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#A1A1AA] group-hover:text-[#18181B] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#A8A29E] group-hover:text-[#1C1917] group-hover:translate-x-0.5 transition-all" />
           </Link>
 
           <Link href="/tasks" className="today-row group">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-4 h-4 text-[#DC2626] shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[#B91C1C] shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-[#18181B]">Overdue tasks</div>
-                <div className="text-[11px] text-[#DC2626] font-medium">2 require attention</div>
+                <div className="text-sm font-bold text-[#1C1917]">Overdue tasks</div>
+                <div className="text-xs text-[#B91C1C] font-semibold">2 require attention</div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#A1A1AA] group-hover:text-[#18181B] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#A8A29E] group-hover:text-[#1C1917] group-hover:translate-x-0.5 transition-all" />
           </Link>
 
           <Link href="/calendar" className="today-row group">
             <div className="flex items-center gap-3">
-              <Calendar className="w-4 h-4 text-[#D97706] shrink-0" />
+              <Calendar className="w-4 h-4 text-[#B45309] shrink-0" />
               <div>
-                <div className="text-xs font-semibold text-[#18181B]">Meetings</div>
-                <div className="text-[11px] text-[#71717A]">1 at 3:30 PM</div>
+                <div className="text-sm font-bold text-[#1C1917]">Meetings</div>
+                <div className="text-xs text-[#57534E]">1 at 3:30 PM</div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#A1A1AA] group-hover:text-[#18181B] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#A8A29E] group-hover:text-[#1C1917] group-hover:translate-x-0.5 transition-all" />
           </Link>
         </div>
       </div>
@@ -198,10 +198,10 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
           <div className="section-label">Sales Pipeline</div>
           <Link
             href="/deals"
-            className="text-xs text-[#4F46E5] hover:text-[#4338CA] font-medium flex items-center gap-1"
+            className="text-xs text-[#4F46E5] hover:text-[#4338CA] font-semibold flex items-center gap-1"
           >
             <span>Manage pipeline</span>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -212,14 +212,14 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
               href={`/deals?stage=${stg.key}`}
               className="pipeline-step block"
             >
-              <div className="text-[11px] font-semibold text-[#71717A] uppercase tracking-wider">
+              <div className="text-xs font-bold text-[#78716C] uppercase tracking-wider">
                 {stg.label}
               </div>
               <div className="mt-1.5 flex items-baseline justify-between">
-                <span className="text-sm font-bold text-[#18181B]">
+                <span className="text-base font-bold text-[#1C1917]">
                   {stg.count} {stg.count === 1 ? 'deal' : 'deals'}
                 </span>
-                <span className="text-xs font-mono font-medium text-[#52525B]">
+                <span className="text-xs font-mono font-bold text-[#57534E]">
                   ₹{(stg.valueINR / 100000).toFixed(1)}L
                 </span>
               </div>

@@ -171,28 +171,64 @@ export default function EnquiriesManager() {
     switch (p) {
       case 'URGENT':
       case 'HIGH':
-        return <span className="text-xs font-semibold text-[#B91C1C]">High</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+            High
+          </span>
+        );
       case 'LOW':
-        return <span className="text-xs text-[#A8A29E]">Low</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-stone-100 text-stone-600 border border-stone-200">
+            Low
+          </span>
+        );
       default:
-        return <span className="text-xs font-medium text-[#78716C]">Medium</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+            Medium
+          </span>
+        );
     }
   };
 
   const getStatusBadge = (st: string) => {
     switch (st) {
       case 'CONVERTED':
-        return <span className="text-xs font-semibold text-[#15803D]">Converted</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Converted
+          </span>
+        );
       case 'QUALIFIED':
-        return <span className="text-xs font-semibold text-[#4F46E5]">Qualified</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+            Qualified
+          </span>
+        );
       case 'CONTACTED':
-        return <span className="text-xs font-medium text-[#7C3AED]">Contacted</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+            Contacted
+          </span>
+        );
       case 'REVIEWING':
-        return <span className="text-xs font-medium text-[#B45309]">Reviewing</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+            Reviewing
+          </span>
+        );
       case 'CLOSED':
-        return <span className="text-xs text-[#78716C]">Closed</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-stone-100 text-stone-600 border border-stone-200">
+            Closed
+          </span>
+        );
       default:
-        return <span className="text-xs font-semibold text-[#15803D]">New</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            New
+          </span>
+        );
     }
   };
 
@@ -201,47 +237,47 @@ export default function EnquiriesManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Inbox className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Inbox className="w-6 h-6 text-[#4F46E5]" />
             Inbound Enquiries
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Capture, triage, and qualify client prospect inquiries before converting to pipeline leads.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchEnquiries}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
             title="Refresh database"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Log Enquiry
           </button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <div className="flex items-center gap-2 flex-wrap">
           {ENQUIRY_STATUSES.map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors ${
                 statusFilter === st
-                  ? 'bg-[#171717] text-white'
-                  : 'bg-[#F7F7F5] hover:bg-[#E5E5E2] text-[#5E5E5E]'
+                  ? 'bg-[#1C1917] text-white'
+                  : 'bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
               {st}
@@ -250,14 +286,14 @@ export default function EnquiriesManager() {
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5E5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by name, company, email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchEnquiries()}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#171717] placeholder-[#5E5E5E] focus:outline-none focus:border-[#6366F1]"
+            className="w-full sm:w-72 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -313,61 +349,63 @@ export default function EnquiriesManager() {
                           isSelected ? 'bg-[#F5F3FF]' : 'hover:bg-[#FAFAF9]'
                         }`}
                       >
-                        <td className="py-3 px-4 font-semibold text-[#171717]">
+                        <td className="py-3.5 px-4 font-semibold text-[#1C1917] text-sm">
                           <div>{enq.contactName}</div>
                           {enq.email && (
-                            <div className="text-[11px] text-[#5E5E5E] font-normal truncate max-w-[150px]">
+                            <div className="text-xs text-[#78716C] font-normal truncate max-w-[160px] mt-0.5">
                               {enq.email}
                             </div>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-[#171717]">
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <Building2 className="w-3.5 h-3.5 text-[#5E5E5E] shrink-0" />
+                        <td className="py-3.5 px-4 text-[#1C1917] text-sm">
+                          <div className="flex items-center gap-2 font-medium">
+                            <Building2 className="w-4 h-4 text-[#78716C] shrink-0" />
                             <span>{enq.companyName || 'Individual'}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#57534E] text-xs">
-                          {enq.source}
+                        <td className="py-3.5 px-4">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2] whitespace-nowrap">
+                            {enq.source}
+                          </span>
                         </td>
-                        <td className="py-3 px-4 text-[#1C1917] max-w-[200px] truncate font-medium">
+                        <td className="py-3.5 px-4 text-[#1C1917] max-w-[220px] truncate font-medium text-sm">
                           {enq.title}
                         </td>
-                        <td className="py-3 px-4 text-[#78716C] text-xs">
+                        <td className="py-3.5 px-4 text-[#57534E] text-xs font-medium">
                           {enq.assignedTo?.name || 'Unassigned'}
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <td className="py-3.5 px-4 text-center">
                           {getPriorityBadge(enq.priority)}
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <td className="py-3.5 px-4 text-center">
                           {getStatusBadge(enq.status)}
                         </td>
-                        <td className="py-3 px-4 text-[#78716C] text-xs">
+                        <td className="py-3.5 px-4 text-[#78716C] text-xs">
                           {dateFormatted}
                         </td>
-                        <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
+                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-2.5">
                             {enq.status !== 'CONVERTED' ? (
                               <button
                                 type="button"
                                 disabled={convertingId === enq.id}
                                 onClick={() => handleConvertToLead(enq.id)}
-                                className="btn-primary text-xs py-1 px-2.5"
+                                className="btn-primary text-xs py-1.5 px-3"
                                 title="Convert this enquiry to a full CRM Lead"
                               >
                                 <span>{convertingId === enq.id ? 'Converting...' : 'Convert'}</span>
-                                <ArrowRight className="w-3 h-3" />
+                                <ArrowRight className="w-3.5 h-3.5" />
                               </button>
                             ) : (
-                              <span className="text-xs text-[#15803D] font-medium inline-flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3" />
+                              <span className="text-xs text-[#15803D] font-semibold inline-flex items-center gap-1.5">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
                                 Converted
                               </span>
                             )}
                             <button
                               type="button"
                               onClick={() => handleDelete(enq.id)}
-                              className="p-1 rounded text-[#78716C] hover:text-[#B91C1C] transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[#FEE2E2] text-[#78716C] hover:text-[#B91C1C] transition-colors"
                               title="Delete enquiry"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
