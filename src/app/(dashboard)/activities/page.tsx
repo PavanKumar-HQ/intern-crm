@@ -8,7 +8,8 @@ import {
   User,
   Clock,
   ArrowRight,
-  ShieldAlert,
+  ShieldCheck,
+  Activity,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
 
@@ -62,80 +63,94 @@ export default function ActivitiesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <History className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <History className="w-6 h-6 text-[#4F46E5]" />
             Real-time Activity Timeline
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Operational event log across leads, sales pipeline transitions, task completions, and billing.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Live SSE Stream Active
+          </span>
+
           <button
             type="button"
             onClick={fetchLogs}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
-            title="Refresh"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
+            title="Refresh Timeline"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex justify-between items-center">
-        <span className="text-xs font-semibold text-[#171717]">
-          {logs.length} Logged Realtime Events
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <span className="text-xs font-bold text-[#1C1917]">
+          {filtered.length} Logged Realtime Operations
         </span>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#5E5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search activities..."
+            placeholder="Search activities by keyword, user, resource..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#171717] placeholder-[#5E5E5E] focus:outline-none focus:border-[#6366F1]"
+            className="w-full sm:w-80 pl-9 pr-3.5 py-2 text-sm rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
 
       {/* Activity Timeline Stream */}
-      <div className="bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xs">
+      <div className="bg-white border border-[#E2DDD2] rounded-xl p-6 shadow-xs">
         {loading ? (
-          <div className="py-12 text-center text-xs text-[#5E5E5E]">
-            Loading audit activities...
+          <div className="py-12 text-center text-sm text-[#57534E] flex items-center justify-center gap-2">
+            <RefreshCw className="w-4 h-4 animate-spin text-[#4F46E5]" />
+            Streaming operational events from database...
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-12 text-center text-xs text-[#5E5E5E]">
-            No activity records matching your search.
+          <div className="py-12 text-center text-sm text-[#78716C]">
+            <Activity className="w-8 h-8 text-[#A8A29E] mx-auto mb-2 opacity-60" />
+            <p className="font-bold text-[#1C1917]">No activity records matching your search</p>
+            <p className="text-xs text-[#57534E] mt-0.5">Try a different query or clear the filter.</p>
           </div>
         ) : (
-          <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#E5E5E2]">
+          <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#E2DDD2]">
             {filtered.map((item) => {
               const time = new Date(item.timestamp);
-              const formattedTime = time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-              const formattedDate = time.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+              const formattedTime = time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+              const formattedDate = time.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
               return (
                 <div key={item.id} className="relative group">
                   {/* Timeline bullet */}
-                  <div className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-[#6366F1] ring-4 ring-white" />
+                  <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-[#4F46E5] ring-4 ring-white shadow-xs" />
 
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                    <div className="text-xs font-bold text-[#171717] flex items-center gap-2">
-                      <span>{item.userName || 'System Operator'}</span>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] font-medium">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <div className="text-xs font-bold text-[#1C1917] flex items-center gap-2 flex-wrap">
+                      <span className="w-6 h-6 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center text-[10px] font-bold">
+                        {(item.userName || item.userId || 'S').charAt(0).toUpperCase()}
+                      </span>
+                      <span>{item.userName || item.userId || 'System Operator'}</span>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#EAE6DC] border border-[#DDD7C9] text-[#44403C]">
                         {item.resource}
                       </span>
+                      <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700">
+                        {item.action}
+                      </span>
                     </div>
-                    <div className="text-[11px] text-[#5E5E5E] font-mono">
-                      {formattedDate}, {formattedTime}
+                    <div className="text-xs text-[#78716C] font-mono">
+                      {formattedDate} · {formattedTime}
                     </div>
                   </div>
 
-                  <p className="text-xs text-[#5E5E5E] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#1C1917] mt-1.5 leading-relaxed font-medium pl-8">
                     {item.details || `${item.action} performed on ${item.resource}`}
                   </p>
                 </div>

@@ -7,15 +7,12 @@ import {
   Plus,
   Play,
   Pause,
-  Trash2,
   Users,
-  Sparkles,
   Search,
-  Filter,
   ArrowUpRight,
   TrendingUp,
-  Cpu,
-  Clock,
+  MapPin,
+  Calendar,
   Layers,
 } from 'lucide-react';
 import { useRealtime } from '@/context/RealtimeContext';
@@ -123,21 +120,21 @@ export default function CampaignListManager() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Target className="w-5 h-5 text-blue-500" />
+          <h1 className="text-xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2">
+            <Target className="w-5 h-5 text-[#4F46E5]" />
             Campaign Management Hub
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[#57534E] mt-0.5">
             Configure discovery parameters, AI target criteria, and monitor automated prospecting velocity.
           </p>
         </div>
         <Link
           href="/campaigns/new"
-          className="btn btn-brand inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20 transition-all self-start"
+          className="btn-primary inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg text-white shadow-xs transition-all self-start cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Create New Campaign
@@ -145,16 +142,16 @@ export default function CampaignListManager() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[#121215] border border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs">
         <div className="flex items-center gap-1.5 flex-wrap">
           {(['ALL', 'ACTIVE', 'PAUSED', 'DRAFT'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
                 filter === tab
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               {tab === 'ALL' ? 'All Campaigns' : tab}
@@ -163,13 +160,13 @@ export default function CampaignListManager() {
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search campaigns, industry, location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-[#18181c] border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
+            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] placeholder-[#A8A29E] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -183,28 +180,28 @@ export default function CampaignListManager() {
           return (
             <div
               key={camp.id}
-              className="p-5 rounded-xl bg-[#121215] border border-white/10 hover:border-white/20 transition-all shadow-md flex flex-col justify-between group"
+              className="p-5 rounded-xl bg-white border border-[#E5E5E2] hover:border-[#D6D3D1] hover:shadow-sm transition-all flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-white text-sm group-hover:text-blue-400 transition-colors">
+                      <h3 className="font-bold text-[#1C1917] text-sm group-hover:text-[#4F46E5] transition-colors">
                         {camp.name}
                       </h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
                           camp.status === 'ACTIVE'
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
                             : camp.status === 'PAUSED'
-                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                            : 'bg-zinc-800 text-zinc-400'
+                            ? 'bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]'
+                            : 'bg-[#F5F5F4] text-[#57534E] border border-[#E7E5E4]'
                         }`}
                       >
                         {camp.status}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#57534E] mt-1 line-clamp-2 leading-relaxed">
                       {camp.description}
                     </p>
                   </div>
@@ -212,13 +209,13 @@ export default function CampaignListManager() {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1.5 mt-3">
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#18181c] text-zinc-400 border border-white/5">
-                    📍 {camp.location}
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#FAF8F5] text-[#57534E] border border-[#E5E5E2] flex items-center gap-1 font-medium">
+                    <MapPin className="w-3 h-3 text-[#78716C]" /> {camp.location}
                   </span>
                   {camp.industries.map((ind) => (
                     <span
                       key={ind}
-                      className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                      className="text-[10px] px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] font-medium"
                     >
                       {ind}
                     </span>
@@ -226,43 +223,45 @@ export default function CampaignListManager() {
                 </div>
 
                 {/* Progress Stats */}
-                <div className="mt-4 pt-3 border-t border-white/5 space-y-2">
+                <div className="mt-4 pt-3 border-t border-[#E5E5E2] space-y-2">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-zinc-400 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-zinc-500" />
+                    <span className="text-[#57534E] flex items-center gap-1.5 font-medium">
+                      <Users className="w-3.5 h-3.5 text-[#78716C]" />
                       Lead Discovery Progress:
                     </span>
-                    <span className="font-semibold text-white">
+                    <span className="font-bold text-[#1C1917]">
                       {camp.currentLeads} / {target} leads ({progressPct}%)
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-[#FAF8F5] border border-[#E5E5E2] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
-                        progressPct >= 80 ? 'bg-emerald-500' : 'bg-blue-500'
+                        progressPct >= 80 ? 'bg-[#059669]' : 'bg-[#4F46E5]'
                       }`}
                       style={{ width: `${progressPct}%` }}
                     />
                   </div>
 
-                  <div className="flex justify-between items-center text-[11px] text-zinc-500 pt-1">
+                  <div className="flex justify-between items-center text-[11px] text-[#78716C] pt-1">
                     <span>
-                      Spend: <strong>₹{camp.spentINR}</strong> / ₹{camp.budgetLimitINR || 500}
+                      Spend: <strong className="text-[#1C1917]">₹{camp.spentINR}</strong> / ₹{camp.budgetLimitINR || 500}
                     </span>
-                    <span>Created: {camp.createdAt}</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-[#A8A29E]" /> {camp.createdAt}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Actions */}
-              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-[#E5E5E2] flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => toggleCampaignStatus(camp.id, camp.status)}
-                  className={`text-xs px-2.5 py-1.5 rounded-lg border font-medium flex items-center gap-1.5 transition-colors ${
+                  className={`text-xs px-2.5 py-1.5 rounded-lg border font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     camp.status === 'ACTIVE'
-                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
-                      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                      ? 'bg-[#FFFBEB] text-[#92400E] border-[#FDE68A] hover:bg-[#FEF3C7]'
+                      : 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0] hover:bg-[#D1FAE5]'
                   }`}
                 >
                   {camp.status === 'ACTIVE' ? (
@@ -279,7 +278,7 @@ export default function CampaignListManager() {
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/prospects?campaign=${camp.id}`}
-                    className="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
+                    className="text-xs text-[#4F46E5] hover:text-[#4338CA] font-semibold flex items-center gap-1 transition-colors"
                   >
                     View Prospects <ArrowUpRight className="w-3 h-3" />
                   </Link>

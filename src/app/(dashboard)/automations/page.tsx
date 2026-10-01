@@ -76,69 +76,69 @@ export default function AutomationsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Zap className="w-6 h-6 text-[#4F46E5]" />
             Workflow Automations & Event Triggers
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Event-driven triggers executing automated lead triage, pipeline progressions, and overdue task alerts.
           </p>
         </div>
 
         <button
           type="button"
-          onClick={() => alert('New automation builder rule editor connected')}
-          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer self-start"
+          onClick={() => alert('New automation rule editor is connected and ready.')}
+          className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer self-start"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-4 h-4" />
           Create Rule
         </button>
       </div>
 
       {/* Rules List */}
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {rules.map((rule) => (
           <div
             key={rule.id}
-            className="p-4 rounded-xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            className="p-5 rounded-xl bg-white border border-[#E2DDD2] hover:border-[#4F46E5] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all"
           >
-            <div className="space-y-1.5 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-[#171717]">{rule.name}</span>
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2.5">
+                <span className="text-base font-bold text-[#1C1917]">{rule.name}</span>
                 <span
-                  className={`text-[10px] font-semibold px-2 py-0.2 rounded-full border ${
+                  className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
                     rule.active
-                      ? 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]'
-                      : 'bg-[#F3F4F6] text-[#4B5563] border-[#E5E7EB]'
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-[#EAE6DC] text-[#44403C] border-[#DDD7C9]'
                   }`}
                 >
                   {rule.active ? 'Active' : 'Paused'}
                 </span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs font-mono text-[#5E5E5E]">
-                <span className="text-[#6366F1] font-semibold">{rule.trigger}</span>
-                <ArrowRight className="w-3 h-3 text-[#5E5E5E] hidden sm:inline" />
-                <span className="text-[#171717]">{rule.action}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs font-mono text-[#57534E]">
+                <span className="text-[#4F46E5] font-bold">{rule.trigger}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#A8A29E] hidden sm:inline" />
+                <span className="text-[#1C1917] font-medium">{rule.action}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 border-t sm:border-t-0 pt-2 sm:pt-0 border-[#E5E5E2]">
-              <div className="text-right text-[11px] text-[#5E5E5E]">
-                <div>Last run: <strong className="text-[#171717]">{rule.lastExecuted}</strong></div>
+            <div className="flex items-center gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#F5F2EB]">
+              <div className="text-right text-xs text-[#78716C]">
+                <div>Last run: <strong className="text-[#1C1917]">{rule.lastExecuted}</strong></div>
                 <div>Fired {rule.executionCount} times</div>
               </div>
 
               <button
                 type="button"
                 onClick={() => toggleRule(rule.id)}
-                className="text-[#6366F1] hover:text-[#4F46E5] transition-colors"
+                className="text-[#4F46E5] hover:text-[#4338CA] transition-colors cursor-pointer"
                 title={rule.active ? 'Pause Rule' : 'Activate Rule'}
               >
                 {rule.active ? (
-                  <ToggleRight className="w-7 h-7 text-[#6366F1]" />
+                  <ToggleRight className="w-8 h-8 text-[#4F46E5]" />
                 ) : (
-                  <ToggleLeft className="w-7 h-7 text-[#5E5E5E]" />
+                  <ToggleLeft className="w-8 h-8 text-[#A8A29E]" />
                 )}
               </button>
             </div>

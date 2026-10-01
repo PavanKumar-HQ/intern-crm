@@ -152,68 +152,68 @@ export default function TeamManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <Users className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <Users className="w-6 h-6 text-[#4F46E5]" />
             Team Roster & Roles (RBAC)
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Internal Brandex operators, permission levels, workload distribution, and account status.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchTeam}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
-            title="Refresh"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
+            title="Refresh Team"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             Invite Member
           </button>
         </div>
       </div>
 
       {/* Team Table */}
-      <div className="bg-white border border-[#E5E5E2] rounded-xl overflow-hidden shadow-xs">
+      <div className="bg-white border border-[#E2DDD2] rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#FAFAF9] border-b border-[#E5E5E2] text-[#5E5E5E]">
+              <tr className="bg-[#FAF8F5] border-b border-[#E2DDD2] text-[#57534E]">
                 <th className="py-3 px-4 font-semibold">Team Member</th>
                 <th className="py-3 px-4 font-semibold">Security Role (RBAC)</th>
-                <th className="py-3 px-4 font-semibold">Status</th>
+                <th className="py-3 px-4 font-semibold">Account Status</th>
                 <th className="py-3 px-4 font-semibold text-center">Assigned Leads</th>
-                <th className="py-3 px-4 font-semibold text-center">Tasks</th>
+                <th className="py-3 px-4 font-semibold text-center">Open Tasks</th>
                 <th className="py-3 px-4 font-semibold text-right">Joined</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E5E2]">
+            <tbody className="divide-y divide-[#F5F2EB]">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-[#FAFAF9] transition-colors">
-                  <td className="py-3 px-4">
-                    <div className="font-semibold text-[#171717] flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-[#FAFAF9] border border-[#E5E5E2] flex items-center justify-center font-bold text-xs text-[#6366F1]">
+                <tr key={u.id} className="hover:bg-[#FAF8F5] transition-colors">
+                  <td className="py-3.5 px-4">
+                    <div className="font-bold text-[#1C1917] flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center font-bold text-xs text-[#4F46E5] shadow-2xs">
                         {u.name?.charAt(0) || 'U'}
                       </div>
                       <div>
                         <div>{u.name}</div>
-                        <div className="text-[11px] text-[#5E5E5E] font-mono">{u.email}</div>
+                        <div className="text-[11px] text-[#78716C] font-mono">{u.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3.5 px-4">
                     <select
                       value={u.role}
                       onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                      className="p-1 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs font-semibold focus:outline-none focus:border-[#6366F1]"
+                      className="py-1 px-2.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] text-xs font-semibold focus:outline-none focus:border-[#4F46E5]"
                     >
                       <option value="ADMIN">ADMIN</option>
                       <option value="MANAGER">MANAGER</option>
@@ -221,27 +221,27 @@ export default function TeamManager() {
                       <option value="VIEWER">VIEWER</option>
                     </select>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3.5 px-4">
                     <button
                       type="button"
                       onClick={() => handleToggleActive(u.id, u.active)}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                         u.active
-                          ? 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]'
-                          : 'bg-[#F3F4F6] text-[#4B5563] border-[#E5E7EB]'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-[#EAE6DC] text-[#44403C] border-[#DDD7C9]'
                       }`}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full ${u.active ? 'bg-[#10B981]' : 'bg-[#9CA3AF]'}`} />
+                      <span className={`w-1.5 h-1.5 rounded-full ${u.active ? 'bg-emerald-500' : 'bg-stone-400'}`} />
                       {u.active ? 'Active' : 'Suspended'}
                     </button>
                   </td>
-                  <td className="py-3 px-4 text-center font-semibold text-[#171717]">
+                  <td className="py-3.5 px-4 text-center font-bold text-[#1C1917]">
                     {u._count?.assignedLeads || 0}
                   </td>
-                  <td className="py-3 px-4 text-center font-semibold text-[#6366F1]">
+                  <td className="py-3.5 px-4 text-center font-bold text-[#4F46E5]">
                     {u._count?.assignedTasks || 0}
                   </td>
-                  <td className="py-3 px-4 text-right text-[#5E5E5E] font-mono">
+                  <td className="py-3.5 px-4 text-right text-[#78716C] font-mono text-xs">
                     {u.createdAt}
                   </td>
                 </tr>

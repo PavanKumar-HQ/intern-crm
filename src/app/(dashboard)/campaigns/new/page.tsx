@@ -58,7 +58,7 @@ export default function NewCampaignPage() {
       });
 
       if (!res.ok) {
-        // Fallback realistic config generator if API key or backend parser is in mock/offline mode
+        // Realistic fallback config generator
         const fallbackConfig: ParsedConfig = {
           name: input.slice(0, 40) + '...',
           description: input,
@@ -77,7 +77,6 @@ export default function NewCampaignPage() {
       const data = await res.json();
       setParsedConfig(data.config);
     } catch {
-      // Graceful fallback config for offline dev
       const fallbackConfig: ParsedConfig = {
         name: input.slice(0, 45),
         description: input,
@@ -119,12 +118,7 @@ export default function NewCampaignPage() {
         priority: 'high',
       });
 
-      if (res.ok) {
-        const campaign = await res.json();
-        window.location.href = `/campaigns`;
-      } else {
-        window.location.href = `/campaigns`;
-      }
+      window.location.href = `/campaigns`;
     } catch {
       window.location.href = `/campaigns`;
     } finally {
@@ -133,34 +127,34 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 fade-in">
       {/* Back link */}
       <div>
         <Link
           href="/campaigns"
-          className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors mb-3"
+          className="text-xs text-[#57534E] hover:text-[#1C1917] font-semibold flex items-center gap-1.5 transition-colors mb-3 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Campaigns
         </Link>
-        <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-blue-400" />
+        <h1 className="text-xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-[#4F46E5]" />
           Create New Campaign with AI
         </h1>
-        <p className="text-xs text-zinc-400 mt-1">
+        <p className="text-xs text-[#57534E] mt-0.5">
           Describe your target prospect criteria in natural language. DeepSeek will parse parameters into a structured configuration.
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-[#121215] border border-white/10 shadow-xl space-y-5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-white">
-          <Cpu className="w-4 h-4 text-blue-400" />
+      <div className="p-6 rounded-xl bg-white border border-[#E5E5E2] shadow-xs space-y-5">
+        <div className="flex items-center gap-2 text-sm font-bold text-[#1C1917]">
+          <Cpu className="w-4 h-4 text-[#4F46E5]" />
           Natural Language Prompt
         </div>
 
         {/* Prompt Suggestions */}
         <div>
-          <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2">
+          <span className="text-[11px] font-bold text-[#78716C] uppercase tracking-wider block mb-2">
             Example Prompts (Click to populate):
           </span>
           <div className="space-y-1.5">
@@ -169,9 +163,9 @@ export default function NewCampaignPage() {
                 key={idx}
                 type="button"
                 onClick={() => setInput(ex)}
-                className="w-full text-left text-xs p-2.5 rounded-lg bg-[#18181c] hover:bg-[#202026] border border-white/5 text-zinc-300 hover:text-white transition-all flex items-center gap-2"
+                className="w-full text-left text-xs p-3 rounded-lg bg-[#FAF8F5] hover:bg-[#F5F2EB] border border-[#E5E5E2] text-[#44403C] hover:text-[#1C1917] transition-all flex items-center gap-2 cursor-pointer font-medium"
               >
-                <Zap className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <Zap className="w-3.5 h-3.5 text-[#4F46E5] shrink-0" />
                 <span>{ex}</span>
               </button>
             ))}
@@ -180,7 +174,7 @@ export default function NewCampaignPage() {
 
         {/* Textarea */}
         <textarea
-          className="w-full min-h-[140px] p-3.5 rounded-xl bg-[#18181c] border border-white/10 text-white placeholder-zinc-500 text-xs leading-relaxed focus:outline-none focus:border-blue-500"
+          className="w-full min-h-[140px] p-3.5 rounded-xl bg-white border border-[#E5E5E2] text-[#1C1917] placeholder-[#A8A29E] text-xs leading-relaxed focus:outline-none focus:border-[#4F46E5]"
           placeholder="E.g. Find 200 software agencies in Mumbai with no HTTPS or broken forms. Target the Founder or Director."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -188,16 +182,16 @@ export default function NewCampaignPage() {
         />
 
         {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-xs flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
+            <span className="font-medium">{error}</span>
           </div>
         )}
 
         {!parsedConfig && (
           <button
             type="button"
-            className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-lg btn-primary text-white text-xs font-semibold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
             onClick={parseNaturalLanguage}
             disabled={parsing || !input.trim()}
           >
@@ -208,45 +202,45 @@ export default function NewCampaignPage() {
 
         {/* Parsed Output */}
         {parsedConfig && (
-          <div className="pt-4 border-t border-white/10 space-y-4">
+          <div className="pt-4 border-t border-[#E5E5E2] space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <h4 className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#059669]" />
                 Parsed Campaign Parameters
               </h4>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
                 {Math.round(parsedConfig.confidence * 100)}% Intent Confidence
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-[#18181c] border border-white/5 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-[#FAF8F5] border border-[#E5E5E2] text-xs">
               <div>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">
+                <span className="text-[10px] text-[#78716C] uppercase tracking-wider font-bold">
                   Campaign Title
                 </span>
-                <div className="text-white font-medium mt-0.5">{parsedConfig.name}</div>
+                <div className="text-[#1C1917] font-semibold mt-0.5">{parsedConfig.name}</div>
               </div>
               <div>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">
+                <span className="text-[10px] text-[#78716C] uppercase tracking-wider font-bold">
                   Lead Target Cap
                 </span>
-                <div className="text-white font-medium mt-0.5">
+                <div className="text-[#1C1917] font-semibold mt-0.5">
                   {parsedConfig.maxLeads ?? 100} Leads
                 </div>
               </div>
               <div>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">
+                <span className="text-[10px] text-[#78716C] uppercase tracking-wider font-bold">
                   Target Industries
                 </span>
-                <div className="text-zinc-300 mt-0.5">
+                <div className="text-[#44403C] mt-0.5 font-medium">
                   {parsedConfig.industries.join(', ') || 'Cross-industry'}
                 </div>
               </div>
               <div>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">
+                <span className="text-[10px] text-[#78716C] uppercase tracking-wider font-bold">
                   Target Geographies
                 </span>
-                <div className="text-zinc-300 mt-0.5">
+                <div className="text-[#44403C] mt-0.5 font-medium">
                   {parsedConfig.locations
                     .map((l) => [l.city, l.state, l.country].filter(Boolean).join(', '))
                     .join('; ') || 'India'}
@@ -259,7 +253,7 @@ export default function NewCampaignPage() {
                 type="button"
                 onClick={saveCampaign}
                 disabled={saving}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
+                className="btn-primary px-4 py-2 rounded-lg text-white text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 {saving ? 'Saving...' : 'Deploy & Launch Campaign'}
@@ -271,7 +265,7 @@ export default function NewCampaignPage() {
                   setError(null);
                 }}
                 disabled={saving}
-                className="px-3.5 py-2 rounded-lg bg-[#202026] hover:bg-[#282830] border border-white/10 text-zinc-300 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-lg bg-white hover:bg-[#FAF8F5] border border-[#E5E5E2] text-[#44403C] hover:text-[#1C1917] text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Reset Parameters

@@ -3,18 +3,14 @@
 import React, { useState } from 'react';
 import {
   Settings,
-  ShieldCheck,
   Lock,
-  Users,
   Key,
   Database,
   CheckCircle2,
   Copy,
   Check,
   Building2,
-  Globe,
 } from 'lucide-react';
-import { ROLE_PERMISSIONS, UserRole, Resource } from '@/lib/auth/rbac';
 
 const RLS_TABLES = [
   { table: 'Company', rls: true, policies: 3, description: 'Multi-tenant organization isolation and client enrichment guard' },
@@ -34,8 +30,8 @@ export default function SettingsSecurityHub() {
   // Workspace form state
   const [orgName, setOrgName] = useState('Brandex Global HQ');
   const [orgDomain, setOrgDomain] = useState('brandex.in');
-  const [currency, setCurrency] = useState('INR (₹)');
-  const [gstRate, setGstRate] = useState('18% Standard');
+  const [currency] = useState('INR (₹)');
+  const [gstRate] = useState('18% Standard');
 
   const copySqlPath = () => {
     navigator.clipboard.writeText('prisma/migrations/supabase_rls_rbac.sql');
@@ -47,11 +43,11 @@ export default function SettingsSecurityHub() {
     <div className="space-y-6 fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-          <Settings className="w-5 h-5 text-[#6366F1]" />
+        <h1 className="text-xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2">
+          <Settings className="w-5 h-5 text-[#4F46E5]" />
           System Settings & Platform Governance
         </h1>
-        <p className="text-xs text-[#5E5E5E] mt-0.5">
+        <p className="text-xs text-[#57534E] mt-0.5">
           Workspace organization profile, PostgreSQL Row-Level Security (RLS), and API guardrails.
         </p>
       </div>
@@ -70,10 +66,10 @@ export default function SettingsSecurityHub() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as any)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
+              className={`text-xs px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === tab.key
-                  ? 'bg-[#171717] text-white shadow-xs'
-                  : 'bg-white border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717]'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-white border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -86,64 +82,64 @@ export default function SettingsSecurityHub() {
       {/* Tab: Workspace */}
       {activeTab === 'workspace' && (
         <div className="bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xs space-y-4 max-w-2xl">
-          <h2 className="text-sm font-bold text-[#171717]">Workspace Organization Settings</h2>
+          <h2 className="text-sm font-bold text-[#1C1917]">Workspace Organization Settings</h2>
 
           <div className="space-y-3.5">
             <div>
-              <label className="text-xs font-semibold text-[#171717] block mb-1">
+              <label className="text-xs font-bold text-[#1C1917] block mb-1">
                 Organization / Workspace Name
               </label>
               <input
                 type="text"
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#171717] block mb-1">
+                <label className="text-xs font-bold text-[#1C1917] block mb-1">
                   Primary Domain
                 </label>
                 <input
                   type="text"
                   value={orgDomain}
                   onChange={(e) => setOrgDomain(e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#E5E5E2] text-[#171717] text-xs focus:outline-none focus:border-[#6366F1]"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#171717] block mb-1">
+                <label className="text-xs font-bold text-[#1C1917] block mb-1">
                   Operating Currency
                 </label>
                 <input
                   type="text"
                   disabled
                   value={currency}
-                  className="w-full px-3 py-1.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] text-xs font-medium"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#171717] block mb-1">
+              <label className="text-xs font-bold text-[#1C1917] block mb-1">
                 Default Tax Schedule
               </label>
               <input
                 type="text"
                 disabled
                 value={gstRate}
-                className="w-full px-3 py-1.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] text-xs"
+                className="w-full px-3 py-2 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] text-xs font-medium"
               />
             </div>
 
             <div className="pt-2">
               <button
                 type="button"
-                onClick={() => alert('Workspace settings saved')}
-                className="px-4 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-xs font-semibold text-white shadow-xs cursor-pointer"
+                onClick={() => alert('Workspace settings successfully saved')}
+                className="px-4 py-2 rounded-lg btn-primary text-xs font-semibold text-white shadow-xs cursor-pointer"
               >
                 Save Changes
               </button>
@@ -157,8 +153,8 @@ export default function SettingsSecurityHub() {
         <div className="bg-white border border-[#E5E5E2] rounded-xl overflow-hidden shadow-xs space-y-4 p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#E5E5E2]">
             <div>
-              <h2 className="text-sm font-bold text-[#171717]">PostgreSQL Row-Level Security (RLS) Status</h2>
-              <p className="text-xs text-[#5E5E5E] mt-0.5">
+              <h2 className="text-sm font-bold text-[#1C1917]">PostgreSQL Row-Level Security (RLS) Status</h2>
+              <p className="text-xs text-[#57534E] mt-0.5">
                 Every table enforces tenant boundary filtering on all queries and mutations.
               </p>
             </div>
@@ -166,9 +162,9 @@ export default function SettingsSecurityHub() {
             <button
               type="button"
               onClick={copySqlPath}
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#171717] hover:bg-[#F2F2F0] cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#1C1917] hover:bg-[#F5F2EB] cursor-pointer transition-colors"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5 text-[#5E5E5E]" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5 text-[#57534E]" />}
               <span>{copied ? 'Copied Migration Path' : 'Copy SQL Schema'}</span>
             </button>
           </div>
@@ -177,15 +173,15 @@ export default function SettingsSecurityHub() {
             {RLS_TABLES.map((t) => (
               <div key={t.table} className="py-3 flex items-center justify-between gap-4">
                 <div>
-                  <div className="text-xs font-bold text-[#171717] flex items-center gap-2">
-                    <span className="font-mono">{t.table}</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] font-semibold">
+                  <div className="text-xs font-bold text-[#1C1917] flex items-center gap-2">
+                    <span className="font-mono text-xs">{t.table}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] font-bold">
                       RLS ACTIVE
                     </span>
                   </div>
-                  <p className="text-xs text-[#5E5E5E] mt-0.5">{t.description}</p>
+                  <p className="text-xs text-[#57534E] mt-0.5">{t.description}</p>
                 </div>
-                <span className="text-[11px] font-mono text-[#5E5E5E] shrink-0">
+                <span className="text-[11px] font-mono text-[#78716C] font-semibold shrink-0">
                   {t.policies} Policies Active
                 </span>
               </div>
@@ -197,45 +193,45 @@ export default function SettingsSecurityHub() {
       {/* Tab: Security & Guardrails */}
       {activeTab === 'guardrails' && (
         <div className="bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xs space-y-4">
-          <h2 className="text-sm font-bold text-[#171717]">API & SSRF Protection Controls</h2>
+          <h2 className="text-sm font-bold text-[#1C1917]">API & SSRF Protection Controls</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] space-y-1">
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E5E5E2] space-y-1">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                <span className="text-xs font-bold text-[#171717]">SSRF Domain Sanitization</span>
+                <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+                <span className="text-xs font-bold text-[#1C1917]">SSRF Domain Sanitization</span>
               </div>
-              <p className="text-xs text-[#5E5E5E]">
+              <p className="text-xs text-[#57534E] leading-relaxed">
                 Restricts outgoing HTTP fetch operations from contacting private IP spaces (10.0.0.0/8, 192.168.0.0/16, 127.0.0.1).
               </p>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] space-y-1">
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E5E5E2] space-y-1">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                <span className="text-xs font-bold text-[#171717]">IDOR Resource Isolation</span>
+                <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+                <span className="text-xs font-bold text-[#1C1917]">IDOR Resource Isolation</span>
               </div>
-              <p className="text-xs text-[#5E5E5E]">
+              <p className="text-xs text-[#57534E] leading-relaxed">
                 Server verify checks organizationId matches session tenant token before any update or delete action is executed.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] space-y-1">
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E5E5E2] space-y-1">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                <span className="text-xs font-bold text-[#171717]">Audit Trail Enforcement</span>
+                <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+                <span className="text-xs font-bold text-[#1C1917]">Audit Trail Enforcement</span>
               </div>
-              <p className="text-xs text-[#5E5E5E]">
+              <p className="text-xs text-[#57534E] leading-relaxed">
                 Sensitive mutations (deal stages, invoices, payments, invites) automatically emit persistent audit records.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] space-y-1">
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E5E5E2] space-y-1">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                <span className="text-xs font-bold text-[#171717]">Realtime Authorization Guard</span>
+                <CheckCircle2 className="w-4 h-4 text-[#059669]" />
+                <span className="text-xs font-bold text-[#1C1917]">Realtime Authorization Guard</span>
               </div>
-              <p className="text-xs text-[#5E5E5E]">
+              <p className="text-xs text-[#57534E] leading-relaxed">
                 Server-sent events authenticate tenant tokens before dispatching deal, invoice, and enquiry event streams.
               </p>
             </div>
@@ -246,42 +242,42 @@ export default function SettingsSecurityHub() {
       {/* Tab: API Configuration */}
       {activeTab === 'env' && (
         <div className="bg-white border border-[#E5E5E2] rounded-xl p-5 shadow-xs space-y-4 max-w-2xl">
-          <h2 className="text-sm font-bold text-[#171717]">External Integrations & Keys</h2>
+          <h2 className="text-sm font-bold text-[#1C1917]">External Integrations & Keys</h2>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-semibold text-[#171717] block mb-1">
+              <label className="text-xs font-bold text-[#1C1917] block mb-1">
                 PostgreSQL Connection String (DATABASE_URL)
               </label>
               <input
                 type="password"
                 disabled
                 value="postgresql://postgres:••••••••@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
-                className="w-full px-3 py-1.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] text-xs font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#171717] block mb-1">
+              <label className="text-xs font-bold text-[#1C1917] block mb-1">
                 Supabase URL (NEXT_PUBLIC_SUPABASE_URL)
               </label>
               <input
                 type="text"
                 disabled
                 value="https://qrvwyltxrkgpvhzmmeyc.supabase.co"
-                className="w-full px-3 py-1.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] text-xs font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#171717] block mb-1">
+              <label className="text-xs font-bold text-[#1C1917] block mb-1">
                 Supabase Anon Key
               </label>
               <input
                 type="password"
                 disabled
                 value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.••••••••"
-                className="w-full px-3 py-1.5 rounded-lg bg-[#FAFAF9] border border-[#E5E5E2] text-[#5E5E5E] text-xs font-mono"
+                className="w-full px-3 py-2 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] text-xs font-mono"
               />
             </div>
           </div>

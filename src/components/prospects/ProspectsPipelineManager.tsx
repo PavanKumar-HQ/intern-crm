@@ -5,15 +5,12 @@ import Link from 'next/link';
 import {
   Flame,
   Search,
-  Filter,
   ArrowUpRight,
   ShieldCheck,
   Building2,
   ExternalLink,
   Cpu,
   MailCheck,
-  CheckCircle2,
-  XCircle,
   FileText,
   SlidersHorizontal,
 } from 'lucide-react';
@@ -169,40 +166,40 @@ export default function ProspectsPipelineManager() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Flame className="w-5 h-5 text-orange-500" />
+          <h1 className="text-xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2">
+            <Flame className="w-5 h-5 text-[#EA580C]" />
             Prospect Opportunities & Accounts
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[#57534E] mt-0.5">
             Client engagement opportunities scored by high-value fit and operational requirements.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
-            href="/outreach"
-            className="text-xs px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
+            href="/proposals"
+            className="btn-primary text-xs px-4 py-2 rounded-lg text-white font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <MailCheck className="w-4 h-4" />
-            Outreach Queue
+            Outreach & Proposals
           </Link>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[#121215] border border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-white border border-[#E5E5E2] shadow-xs">
         <div className="flex items-center gap-1.5 flex-wrap">
           {(['ALL', 'STRONG_OPPORTUNITY', 'QUALIFIED', 'POTENTIAL'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
                 statusFilter === tab
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  : 'bg-[#FAF8F5] border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
               }`}
             >
               {tab === 'ALL'
@@ -217,13 +214,13 @@ export default function ProspectsPipelineManager() {
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Filter by company, problem, city..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-[#18181c] border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
+            className="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] placeholder-[#A8A29E] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -233,45 +230,45 @@ export default function ProspectsPipelineManager() {
         {filteredProspects.map((opp) => (
           <div
             key={opp.id}
-            className="p-5 rounded-xl bg-[#121215] border border-white/10 hover:border-white/20 transition-all shadow-md group"
+            className="p-5 rounded-xl bg-white border border-[#E5E5E2] hover:border-[#D6D3D1] hover:shadow-xs transition-all group"
           >
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               {/* Left Column: Company & Capability */}
               <div className="space-y-1.5 flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">
+                  <h3 className="text-base font-bold text-[#1C1917] group-hover:text-[#4F46E5] transition-colors">
                     {opp.companyName}
                   </h3>
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
                       opp.status === 'STRONG_OPPORTUNITY'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
                         : opp.status === 'QUALIFIED'
-                        ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        ? 'bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]'
+                        : 'bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]'
                     }`}
                   >
                     {opp.status.replace('_', ' ')}
                   </span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center gap-1">
-                    <Cpu className="w-3 h-3" />
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#FAF8F5] text-[#4F46E5] border border-[#E5E5E2] flex items-center gap-1">
+                    <Cpu className="w-3 h-3 text-[#4F46E5]" />
                     {opp.capabilityName}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-zinc-400">
+                <div className="flex items-center gap-3 text-xs text-[#57534E]">
                   <a
                     href={`https://${opp.website}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-zinc-400 hover:text-blue-400 flex items-center gap-1"
+                    className="text-[#4F46E5] hover:text-[#4338CA] font-medium flex items-center gap-1"
                   >
                     {opp.website} <ExternalLink className="w-2.5 h-2.5" />
                   </a>
                   <span>•</span>
                   <span>{opp.city}</span>
                   <span>•</span>
-                  <span className="text-zinc-500">{opp.industry}</span>
+                  <span className="text-[#78716C]">{opp.industry}</span>
                 </div>
               </div>
 
@@ -279,26 +276,26 @@ export default function ProspectsPipelineManager() {
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-right">
                   <div className="flex items-baseline justify-end gap-1">
-                    <span className="text-2xl font-extrabold text-white">
+                    <span className="text-2xl font-extrabold text-[#1C1917]">
                       {opp.totalScore}
                     </span>
-                    <span className="text-xs text-zinc-500">/ 100</span>
+                    <span className="text-xs text-[#78716C]">/ 100</span>
                   </div>
-                  <div className="text-[10px] text-zinc-400">Client Fit Score</div>
+                  <div className="text-[10px] font-medium text-[#78716C]">Client Fit Score</div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setSelectedOpp(opp)}
-                    className="text-xs px-3 py-2 rounded-lg bg-[#18181c] hover:bg-[#202026] border border-white/10 text-zinc-300 hover:text-white transition-all flex items-center gap-1"
+                    onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
+                    className="text-xs px-3 py-2 rounded-lg bg-[#FAF8F5] hover:bg-[#F5F2EB] border border-[#E5E5E2] text-[#44403C] hover:text-[#1C1917] font-semibold transition-all flex items-center gap-1 cursor-pointer"
                   >
                     <FileText className="w-3.5 h-3.5" /> Audit Findings ({opp.evidenceCount})
                   </button>
                   <button
                     type="button"
                     onClick={() => handleGeneratePitch(opp)}
-                    className="text-xs px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
+                    className="text-xs px-3.5 py-2 rounded-lg btn-primary text-white font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <MailCheck className="w-3.5 h-3.5" /> Create Proposal
                   </button>
@@ -307,41 +304,41 @@ export default function ProspectsPipelineManager() {
             </div>
 
             {/* Problem Description */}
-            <div className="mt-3.5 p-3 rounded-lg bg-[#18181c] border border-white/5 text-xs text-zinc-300 leading-relaxed">
-              <strong className="text-white font-semibold">Client Requirement: </strong>
+            <div className="mt-3.5 p-3 rounded-lg bg-[#FAF8F5] border border-[#E5E5E2] text-xs text-[#44403C] leading-relaxed">
+              <strong className="text-[#1C1917] font-semibold">Client Requirement: </strong>
               {opp.problem}
             </div>
 
             {/* Evidence details accordion if active */}
             {selectedOpp?.id === opp.id && (
-              <div className="mt-3 p-4 rounded-xl bg-blue-950/20 border border-blue-500/20 text-xs space-y-2 animate-in fade-in duration-200">
-                <div className="flex items-center justify-between text-blue-400 font-semibold">
+              <div className="mt-3 p-4 rounded-xl bg-[#EEF2FF]/60 border border-[#C7D2FE] text-xs space-y-2 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between text-[#4338CA] font-bold">
                   <span className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4" />
+                    <ShieldCheck className="w-4 h-4 text-[#4F46E5]" />
                     Key Audit Findings & Data Points
                   </span>
                   <button
                     onClick={() => setSelectedOpp(null)}
-                    className="text-zinc-400 hover:text-white text-[11px]"
+                    className="text-[#78716C] hover:text-[#1C1917] text-[11px] font-semibold cursor-pointer"
                   >
                     Close
                   </button>
                 </div>
-                <div className="grid grid-cols-3 gap-2 py-2 border-y border-blue-500/10 text-center">
+                <div className="grid grid-cols-3 gap-2 py-2 border-y border-[#C7D2FE] text-center">
                   <div>
-                    <span className="text-[10px] text-zinc-400">Conversion Impact</span>
-                    <div className="text-white font-bold">{opp.opportunityStrength}%</div>
+                    <span className="text-[10px] text-[#57534E] font-medium">Conversion Impact</span>
+                    <div className="text-[#1C1917] font-extrabold">{opp.opportunityStrength}%</div>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-400">Technical Urgency</span>
-                    <div className="text-white font-bold">{opp.evidenceQuality}%</div>
+                    <span className="text-[10px] text-[#57534E] font-medium">Technical Urgency</span>
+                    <div className="text-[#1C1917] font-extrabold">{opp.evidenceQuality}%</div>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-400">Brandex Service Fit</span>
-                    <div className="text-white font-bold">{opp.brandexFit}%</div>
+                    <span className="text-[10px] text-[#57534E] font-medium">Brandex Service Fit</span>
+                    <div className="text-[#1C1917] font-extrabold">{opp.brandexFit}%</div>
                   </div>
                 </div>
-                <ul className="space-y-1.5 pl-4 list-disc text-zinc-300 pt-1">
+                <ul className="space-y-1.5 pl-4 list-disc text-[#44403C] pt-1">
                   {opp.evidenceSnippets.map((snip, idx) => (
                     <li key={idx}>{snip}</li>
                   ))}

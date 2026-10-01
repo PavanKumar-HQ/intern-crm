@@ -90,19 +90,19 @@ export default function ProjectsDeliveryManager() {
     switch (health) {
       case 'ON_TRACK':
         return (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] font-semibold">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
             On Track
           </span>
         );
       case 'AT_RISK':
         return (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A] font-semibold">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold">
             At Risk
           </span>
         );
       default:
         return (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FEF2F2] text-[#991B1B] border border-[#FECACA] font-semibold">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">
             Critical
           </span>
         );
@@ -114,30 +114,30 @@ export default function ProjectsDeliveryManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#171717] flex items-center gap-2">
-            <FolderKanban className="w-5 h-5 text-[#6366F1]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
+            <FolderKanban className="w-6 h-6 text-[#4F46E5]" />
             Client Projects & Delivery Operations
           </h1>
-          <p className="text-xs text-[#5E5E5E] mt-0.5">
+          <p className="text-sm text-[#57534E] mt-1">
             Operational milestone tracking for bespoke software deliverables, web systems, and client retainers.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={fetchProjects}
-            className="p-1.5 rounded-lg bg-white hover:bg-[#F7F7F5] border border-[#E5E5E2] text-[#5E5E5E] hover:text-[#171717] transition-colors"
-            title="Refresh"
+            className="p-2 rounded-lg bg-white hover:bg-[#F3EFE7] border border-[#E2DDD2] text-[#57534E] hover:text-[#1C1917] transition-colors"
+            title="Refresh Projects"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white shadow-xs transition-colors cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             New Project
           </button>
         </div>
@@ -146,10 +146,10 @@ export default function ProjectsDeliveryManager() {
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects.length === 0 && !isLoading && (
-          <div className="col-span-full py-16 text-center text-xs text-[#5E5E5E] border border-dashed border-[#E5E5E2] rounded-xl bg-white">
-            <FolderKanban className="w-8 h-8 text-[#5E5E5E] mx-auto mb-2 opacity-50" />
-            <p className="font-medium text-[#171717]">No active client delivery projects</p>
-            <p className="text-[11px] text-[#5E5E5E] mt-0.5">
+          <div className="col-span-full py-16 text-center text-xs text-[#57534E] border border-dashed border-[#DDD7C9] rounded-xl bg-white shadow-xs">
+            <FolderKanban className="w-8 h-8 text-[#A8A29E] mx-auto mb-2 opacity-60" />
+            <p className="font-bold text-sm text-[#1C1917]">No active client delivery projects</p>
+            <p className="text-xs text-[#57534E] mt-0.5">
               Create a new client project to track work scopes and milestone deliverables.
             </p>
           </div>
@@ -158,36 +158,36 @@ export default function ProjectsDeliveryManager() {
         {projects.map((proj) => (
           <div
             key={proj.id}
-            className="p-4 rounded-xl bg-white border border-[#E5E5E2] hover:border-[#6366F1] shadow-xs transition-all flex flex-col justify-between space-y-4"
+            className="p-5 rounded-xl bg-white border border-[#E2DDD2] hover:border-[#4F46E5] shadow-xs transition-all flex flex-col justify-between space-y-4"
           >
             <div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#F7F7F5] text-[#171717] border border-[#E5E5E2]">
+                <span className="text-[11px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#EAE6DC] text-[#44403C] border border-[#DDD7C9]">
                   {proj.status.replace('_', ' ')}
                 </span>
                 {getHealthBadge(proj.health || 'ON_TRACK')}
               </div>
 
-              <h3 className="text-sm font-bold text-[#171717] mt-3">{proj.name}</h3>
-              <p className="text-xs text-[#5E5E5E] mt-1 line-clamp-2 leading-relaxed">
+              <h3 className="text-base font-bold text-[#1C1917] mt-3">{proj.name}</h3>
+              <p className="text-xs text-[#57534E] mt-1 line-clamp-2 leading-relaxed">
                 {proj.description || 'Custom software solution delivered under Brandex Operations.'}
               </p>
             </div>
 
-            <div className="pt-3 border-t border-[#F2F2F0] space-y-2">
-              <div className="flex items-center justify-between text-xs text-[#5E5E5E]">
-                <span className="flex items-center gap-1.5 truncate font-medium text-[#171717]">
-                  <Building2 className="w-3.5 h-3.5 text-[#5E5E5E]" />
+            <div className="pt-3 border-t border-[#F5F2EB] space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#57534E]">
+                <span className="flex items-center gap-1.5 truncate font-medium text-[#1C1917]">
+                  <Building2 className="w-3.5 h-3.5 text-[#78716C]" />
                   {proj.company?.primaryName || proj.companyName || 'Enterprise Account'}
                 </span>
-                <span className="font-mono font-bold text-[#171717]">
+                <span className="font-mono font-bold text-[#1C1917] text-sm">
                   ₹{Number(proj.budget).toLocaleString('en-IN')}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-[#5E5E5E]">
-                <span>Manager: <strong className="text-[#171717]">{proj.managerName || 'Brandex Team'}</strong></span>
-                <span>{proj.deliverables?.length || proj.deliverablesCount || 0} Deliverables</span>
+              <div className="flex items-center justify-between text-xs text-[#78716C]">
+                <span>Manager: <strong className="text-[#1C1917] font-semibold">{proj.managerName || 'Brandex Team'}</strong></span>
+                <span className="font-semibold text-[#4F46E5]">{proj.deliverables?.length || proj.deliverablesCount || 0} Deliverables</span>
               </div>
             </div>
           </div>

@@ -129,7 +129,6 @@ export default function SourcesPage() {
     setError(null);
 
     const count = rawRows.length;
-    // Simulate successful ingestion if endpoint is in dev mode
     setTimeout(async () => {
       const resData = {
         total: count,
@@ -150,26 +149,26 @@ export default function SourcesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-          <UploadCloud className="w-5 h-5 text-blue-500" />
+        <h1 className="text-xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2">
+          <UploadCloud className="w-5 h-5 text-[#4F46E5]" />
           Lead Ingestion & Data Connectors
         </h1>
-        <p className="text-xs text-zinc-400 mt-1">
+        <p className="text-xs text-[#57534E] mt-0.5">
           Import leads from Excel spreadsheets (.xlsx, .xls), CSV lists, or automated Google Places discovery.
         </p>
       </div>
 
       {/* Mode Tabs */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+      <div className="flex items-center gap-2 border-b border-[#E5E5E2] pb-3">
         <button
           onClick={() => setActiveTab('excel')}
-          className={`text-xs px-3.5 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+          className={`text-xs px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'excel'
-              ? 'bg-blue-600 text-white shadow-md'
-              : 'text-zinc-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'bg-white border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
           }`}
         >
           <FileSpreadsheet className="w-4 h-4" />
@@ -177,10 +176,10 @@ export default function SourcesPage() {
         </button>
         <button
           onClick={() => setActiveTab('paste')}
-          className={`text-xs px-3.5 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+          className={`text-xs px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'paste'
-              ? 'bg-blue-600 text-white shadow-md'
-              : 'text-zinc-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'bg-white border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
           }`}
         >
           <ClipboardPaste className="w-4 h-4" />
@@ -188,10 +187,10 @@ export default function SourcesPage() {
         </button>
         <button
           onClick={() => setActiveTab('gmaps')}
-          className={`text-xs px-3.5 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+          className={`text-xs px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'gmaps'
-              ? 'bg-blue-600 text-white shadow-md'
-              : 'text-zinc-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'bg-white border border-[#E5E5E2] text-[#57534E] hover:text-[#1C1917]'
           }`}
         >
           <MapPin className="w-4 h-4" />
@@ -203,9 +202,9 @@ export default function SourcesPage() {
       {activeTab === 'excel' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* File Upload Dropzone Card */}
-          <div className="p-5 rounded-2xl bg-[#121215] border border-white/10 shadow-xl space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <UploadCloud className="w-4 h-4 text-blue-400" />
+          <div className="p-5 rounded-xl bg-white border border-[#E5E5E2] shadow-xs space-y-4">
+            <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
+              <UploadCloud className="w-4 h-4 text-[#4F46E5]" />
               1. Upload Spreadsheet File
             </h3>
 
@@ -216,7 +215,7 @@ export default function SourcesPage() {
                 if (e.dataTransfer.files?.[0]) handleFileDrop(e.dataTransfer.files[0]);
               }}
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-white/15 hover:border-blue-500/50 rounded-2xl p-8 text-center bg-[#18181c] hover:bg-[#1c1c22] cursor-pointer transition-all space-y-3"
+              className="border-2 border-dashed border-[#D6D3D1] hover:border-[#4F46E5] rounded-xl p-8 text-center bg-[#FAF8F5] hover:bg-[#F5F2EB] cursor-pointer transition-all space-y-3"
             >
               <input
                 ref={fileInputRef}
@@ -227,14 +226,14 @@ export default function SourcesPage() {
                   if (e.target.files?.[0]) handleFileDrop(e.target.files[0]);
                 }}
               />
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mx-auto shadow-xs">
                 <FileSpreadsheet className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-white">
+                <h4 className="text-xs font-bold text-[#1C1917]">
                   {file ? file.name : 'Drag & drop Excel (.xlsx, .csv) file here'}
                 </h4>
-                <p className="text-[11px] text-zinc-500 mt-1">
+                <p className="text-[11px] text-[#78716C] mt-1 font-medium">
                   {file
                     ? `${(file.size / 1024).toFixed(1)} KB • ${rawRows.length} rows loaded`
                     : 'or click to browse your files'}
@@ -245,22 +244,22 @@ export default function SourcesPage() {
 
           {/* Column Mapping & Preview */}
           {rawRows.length > 0 && (
-            <div className="p-5 rounded-2xl bg-[#121215] border border-white/10 shadow-xl space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-emerald-400" />
+            <div className="p-5 rounded-xl bg-white border border-[#E5E5E2] shadow-xs space-y-4">
+              <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
+                <FileCheck className="w-4 h-4 text-[#059669]" />
                 2. Map Headers to CRM Schema
               </h3>
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 {FIELD_OPTIONS.map((field) => (
                   <div key={field.key} className="space-y-1">
-                    <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block">
-                      {field.label} {field.required && <span className="text-red-400">*</span>}
+                    <label className="text-[10px] font-bold text-[#78716C] uppercase tracking-wider block">
+                      {field.label} {field.required && <span className="text-red-500">*</span>}
                     </label>
                     <select
                       value={mappings[field.key] || ''}
                       onChange={(e) => setMappings({ ...mappings, [field.key]: e.target.value })}
-                      className="w-full p-2 rounded-lg bg-[#18181c] border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                      className="w-full p-2 rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
                     >
                       <option value="">-- Ignore Field --</option>
                       {columns.map((c) => (
@@ -275,7 +274,7 @@ export default function SourcesPage() {
                 type="button"
                 onClick={handleExcelImport}
                 disabled={importing}
-                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-2.5 rounded-lg btn-primary text-white text-xs font-semibold shadow-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
                 {importing ? 'Processing & Deduplicating...' : `Ingest & Process ${rawRows.length} Leads`}
@@ -287,9 +286,9 @@ export default function SourcesPage() {
 
       {/* Tab 2: Paste CSV */}
       {activeTab === 'paste' && (
-        <div className="max-w-3xl p-5 rounded-2xl bg-[#121215] border border-white/10 shadow-xl space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <ClipboardPaste className="w-4 h-4 text-blue-400" />
+        <div className="max-w-3xl p-5 rounded-xl bg-white border border-[#E5E5E2] shadow-xs space-y-4">
+          <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
+            <ClipboardPaste className="w-4 h-4 text-[#4F46E5]" />
             Paste Raw CSV Text
           </h3>
           <textarea
@@ -297,7 +296,7 @@ export default function SourcesPage() {
             onChange={(e) => setCsvContent(e.target.value)}
             placeholder={`Company,Website,Phone,Email,City,State\nAcme Corp,https://acme.com,+91 9876543210,contact@acme.com,Mumbai,Maharashtra`}
             rows={8}
-            className="w-full p-3 rounded-xl bg-[#18181c] border border-white/10 text-white text-xs font-mono leading-relaxed focus:outline-none focus:border-blue-500"
+            className="w-full p-3 rounded-xl bg-white border border-[#E5E5E2] text-[#1C1917] text-xs font-mono leading-relaxed focus:outline-none focus:border-[#4F46E5]"
           />
           <button
             type="button"
@@ -316,7 +315,7 @@ export default function SourcesPage() {
               }, 1000);
             }}
             disabled={importing || !csvContent.trim()}
-            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2"
+            className="px-4 py-2 rounded-lg btn-primary text-white text-xs font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
             {importing ? 'Ingesting...' : 'Ingest Pasted Leads'}
@@ -326,34 +325,34 @@ export default function SourcesPage() {
 
       {/* Tab 3: Google Maps */}
       {activeTab === 'gmaps' && (
-        <div className="max-w-3xl p-5 rounded-2xl bg-[#121215] border border-white/10 shadow-xl space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-emerald-400" />
+        <div className="max-w-3xl p-5 rounded-xl bg-white border border-[#E5E5E2] shadow-xs space-y-4">
+          <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#059669]" />
             Google Maps Places API Discovery
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1">
+              <label className="text-[10px] font-bold text-[#78716C] uppercase tracking-wider block mb-1">
                 Target Business Type
               </label>
               <input
                 type="text"
                 placeholder="e.g. Dental Clinics, Boutique Architecture"
-                className="w-full p-2.5 rounded-lg bg-[#18181c] border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                className="w-full p-2.5 rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1">
+              <label className="text-[10px] font-bold text-[#78716C] uppercase tracking-wider block mb-1">
                 Target City / Region
               </label>
               <input
                 type="text"
                 placeholder="e.g. Mumbai, Maharashtra"
-                className="w-full p-2.5 rounded-lg bg-[#18181c] border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                className="w-full p-2.5 rounded-lg bg-white border border-[#E5E5E2] text-[#1C1917] text-xs focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-blue-950/20 border border-blue-500/20 text-xs text-zinc-300">
+          <div className="p-3 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-xs text-[#3730A3] font-medium">
             Automated location discovery runs continuously when linked to an active Campaign.
           </div>
         </div>
@@ -361,16 +360,16 @@ export default function SourcesPage() {
 
       {/* Result notification banner */}
       {result && (
-        <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-xs space-y-2">
-          <div className="text-emerald-400 font-bold flex items-center gap-1.5">
+        <div className="p-4 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] text-xs space-y-2">
+          <div className="text-[#065F46] font-bold flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4" />
             Ingestion & Entity Resolution Complete
           </div>
-          <div className="grid grid-cols-4 gap-2 text-zinc-300">
-            <div>Total Rows: <strong className="text-white">{result.total}</strong></div>
-            <div>Imported Unique: <strong className="text-emerald-400">{result.imported}</strong></div>
-            <div>Duplicates Filtered: <strong className="text-amber-400">{result.duplicates}</strong></div>
-            <div>Errors: <strong className="text-white">{result.errors}</strong></div>
+          <div className="grid grid-cols-4 gap-2 text-[#57534E]">
+            <div>Total Rows: <strong className="text-[#1C1917]">{result.total}</strong></div>
+            <div>Imported Unique: <strong className="text-[#059669]">{result.imported}</strong></div>
+            <div>Duplicates Filtered: <strong className="text-[#D97706]">{result.duplicates}</strong></div>
+            <div>Errors: <strong className="text-[#1C1917]">{result.errors}</strong></div>
           </div>
         </div>
       )}
