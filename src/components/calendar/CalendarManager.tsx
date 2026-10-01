@@ -186,11 +186,11 @@ export default function CalendarManager() {
 
       {/* Main Events Container */}
       <div className="bg-white border border-[#E2DDD2] rounded-xl p-5 shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E2DDD2]">
-          <span className="text-xs font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="flex items-center justify-between pb-1">
+          <span className="text-xs font-extrabold text-[#1C1917] uppercase tracking-wider">
             Scheduled Engagements & Deadlines
           </span>
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#EAE6DC] text-[#57534E]">
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#EAE6DC] text-[#57534E]">
             {events.length} Items Listed
           </span>
         </div>
@@ -223,18 +223,18 @@ export default function CalendarManager() {
                   key={`${evt.type}-${evt.id}`}
                   className="p-4 rounded-xl bg-white border border-[#E2DDD2] hover:border-[#4F46E5] hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
-                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-3.5 flex-1 min-w-0">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 shadow-2xs ${
                         isMeeting
-                          ? 'bg-purple-100 text-purple-700 border border-purple-200'
-                          : 'bg-amber-100 text-amber-700 border border-amber-200'
+                          ? 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]'
+                          : 'bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]'
                       }`}
                     >
                       {isMeeting ? (
-                        <Video className="w-5 h-5" />
+                        <Video className="w-4 h-4" />
                       ) : (
-                        <CheckSquare className="w-5 h-5" />
+                        <CheckSquare className="w-4 h-4" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -243,8 +243,8 @@ export default function CalendarManager() {
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${
                             isMeeting
-                              ? 'bg-purple-50 text-purple-700 border border-purple-300'
-                              : 'bg-amber-50 text-amber-700 border border-amber-300'
+                              ? 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]'
+                              : 'bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]'
                           }`}
                         >
                           {isMeeting ? 'Meeting' : 'Task'}

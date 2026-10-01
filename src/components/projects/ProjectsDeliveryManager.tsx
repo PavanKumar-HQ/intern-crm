@@ -245,7 +245,7 @@ export default function ProjectsDeliveryManager() {
                 <button
                   type="button"
                   onClick={() => handleDeleteProject(proj.id)}
-                  className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                  className="p-1 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
                   title="Delete project"
                 >
                   <Trash2 className="w-3.5 h-3.5" />

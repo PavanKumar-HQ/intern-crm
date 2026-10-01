@@ -242,11 +242,11 @@ export default function ProposalsPage() {
                       {new Date(p.validUntil).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           type="button"
                           onClick={() => setViewingProposal(p)}
-                          className="btn-action text-xs"
+                          className="btn-action text-xs py-1 px-2.5"
                           title="View Statement of Work"
                         >
                           <FileText className="w-3.5 h-3.5 text-[#4F46E5]" />
@@ -255,7 +255,7 @@ export default function ProposalsPage() {
                         <select
                           value={p.status}
                           onChange={(e) => handleUpdateProposalStatus(p.id, e.target.value as any)}
-                          className="text-xs px-2 py-1.5 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] font-semibold cursor-pointer focus:outline-none focus:border-[#4F46E5]"
+                          className="text-xs px-2.5 py-1 rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] font-semibold cursor-pointer focus:outline-none focus:border-[#4F46E5]"
                         >
                           <option value="DRAFT">Draft</option>
                           <option value="INTERNAL_REVIEW">Review</option>
@@ -266,7 +266,7 @@ export default function ProposalsPage() {
                         <button
                           type="button"
                           onClick={() => handleDeleteProposal(p.id)}
-                          className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                          className="p-1 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
                           title="Delete proposal"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

@@ -517,17 +517,17 @@ Bank: HDFC Bank Ltd (A/C: 50200088921820, IFSC: HDFC0001234)`;
         </div>
       </div>
 
-      {/* Spacious Dedicated Search and Filter Toolbar */}
-      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3.5">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      {/* Search and Status Filter Toolbar */}
+      <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#E2DDD2] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 overflow-x-auto">
           {['ALL', 'ISSUED', 'PARTIAL', 'PAID', 'OVERDUE'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#1C1917] text-white shadow-xs'
+                  ? 'bg-[#1C1917] text-white shadow-2xs'
                   : 'bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E2DDD2]'
               }`}
             >
@@ -536,14 +536,14 @@ Bank: HDFC Bank Ltd (A/C: 50200088921820, IFSC: HDFC0001234)`;
           ))}
         </div>
 
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative w-full sm:w-64">
           <Search className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search invoice # or client..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5] shadow-2xs"
+            className="w-full pl-9 pr-3.5 py-1.5 text-xs rounded-lg bg-white border border-[#E2DDD2] text-[#1C1917] placeholder-[#78716C] focus:outline-none focus:border-[#4F46E5]"
           />
         </div>
       </div>
@@ -622,19 +622,6 @@ Bank: HDFC Bank Ltd (A/C: 50200088921820, IFSC: HDFC0001234)`;
                       </td>
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {/* View & Print Button */}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPreviewInvoice(inv);
-                              setIsPreviewModalOpen(true);
-                            }}
-                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#4F46E5] hover:bg-[#EEF2FF] hover:border-[#C7D2FE] transition-colors cursor-pointer"
-                            title="View & Print Official Tax Invoice"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                          </button>
-
                           {outstanding > 0 ? (
                             <button
                               type="button"
@@ -643,26 +630,39 @@ Bank: HDFC Bank Ltd (A/C: 50200088921820, IFSC: HDFC0001234)`;
                                 setPayAmount(outstanding.toString());
                                 setIsPaymentModalOpen(true);
                               }}
-                              className="btn-action-primary text-xs py-1 px-2.5 cursor-pointer"
+                              className="btn-action-primary text-xs py-1 px-2.5 cursor-pointer inline-flex items-center gap-1.5"
                             >
                               <CreditCard className="w-3 h-3" />
                               <span>Record Pay</span>
                             </button>
                           ) : (
-                            <span className="badge-emerald text-xs py-1 px-2.5 inline-flex items-center gap-1 font-semibold">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
                               <CheckCircle2 className="w-3 h-3" />
                               Settled
                             </span>
                           )}
 
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteInvoice(inv.id)}
-                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
-                            title="Delete invoice"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="inline-flex items-center bg-[#FAF8F5] border border-[#E2DDD2] rounded-lg p-0.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPreviewInvoice(inv);
+                                setIsPreviewModalOpen(true);
+                              }}
+                              className="p-1 rounded-md text-[#4F46E5] hover:bg-white transition-colors cursor-pointer"
+                              title="View & Print Official Tax Invoice"
+                            >
+                              <FileText className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteInvoice(inv.id)}
+                              className="p-1 rounded-md text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
+                              title="Delete invoice"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       </td>
                     </tr>
