@@ -36,10 +36,10 @@ export default function DashboardLayout({
             <div className="flex items-center gap-3">
               {/* Subtle Live Connection Indicator */}
               <div
-                className="hidden sm:flex items-center gap-1.5 text-[11px] text-[#71717A] px-2 py-1 rounded select-none"
+                className="hidden sm:flex items-center gap-1.5 text-[11px] text-[#065F46] font-semibold px-2.5 py-1 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] select-none shadow-2xs"
                 title="Real-time event stream connected"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
                 <span>Live</span>
               </div>
 

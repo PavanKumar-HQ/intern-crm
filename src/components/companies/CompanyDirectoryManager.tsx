@@ -348,18 +348,18 @@ export default function CompanyDirectoryManager() {
                           {getCompanyStatusBadge(comp.currentStatus)}
                         </td>
                         <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="flex items-center justify-end gap-1.5">
                             <button
                               type="button"
                               onClick={() => setSelectedCompany(comp)}
-                              className="btn-action text-xs"
+                              className="btn-action text-xs py-1 px-2.5"
                             >
                               <span>Inspect</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => handleDeleteCompany(comp.id)}
-                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                              className="p-1 rounded-lg border border-[#E2DDD2] bg-[#FAF8F5] text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
                               title="Delete company"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

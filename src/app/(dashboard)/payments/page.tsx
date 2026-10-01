@@ -129,7 +129,7 @@ export default function PaymentsPage() {
   return (
     <div className="space-y-6 fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E2DDD2]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
             <CreditCard className="w-6 h-6 text-[#4F46E5]" />
@@ -202,7 +202,7 @@ export default function PaymentsPage() {
             <span className="text-xs text-[#78716C] font-bold uppercase tracking-wider block">
               Primary Settlement Channel
             </span>
-            <div className="text-base font-bold text-[#1C1917] mt-1.5 truncate">
+            <div className="text-sm font-bold text-[#1C1917] mt-1.5 truncate">
               NEFT / RTGS Corporate Direct
             </div>
             <span className="text-[11px] text-[#78716C] mt-0.5 block font-medium">Auto-cleared via pooler</span>
@@ -232,57 +232,63 @@ export default function PaymentsPage() {
         </div>
       </div>
 
-      {/* Payments Table */}
+      {/* Payments Table with Uniform Typography */}
       <div className="bg-white border border-[#E2DDD2] rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="crm-table">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr>
-                <th>Invoice Ref</th>
-                <th>Client Account</th>
-                <th>Invoice Total</th>
-                <th>Amount Collected</th>
-                <th>Settlement Status</th>
-                <th>Payment Channel</th>
-                <th className="text-right">Action</th>
+              <tr className="bg-[#FAF8F5] border-b border-[#E2DDD2] text-[#57534E]">
+                <th className="py-3 px-4 font-bold">Invoice Ref</th>
+                <th className="py-3 px-4 font-bold">Client Account</th>
+                <th className="py-3 px-4 font-bold text-right">Invoice Total</th>
+                <th className="py-3 px-4 font-bold text-right">Amount Collected</th>
+                <th className="py-3 px-4 font-bold text-center">Settlement Status</th>
+                <th className="py-3 px-4 font-bold">Payment Channel</th>
+                <th className="py-3 px-4 font-bold text-right">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#E2DDD2]">
               {filtered.map((item) => (
                 <tr key={item.id} className="hover:bg-[#FAF8F5] transition-colors">
-                  <td className="font-mono font-bold text-xs text-[#1C1917]">
+                  <td className="py-3 px-4 font-mono font-bold text-xs text-[#1C1917]">
                     {item.invoiceRef}
                   </td>
-                  <td className="font-bold text-sm text-[#1C1917]">
+                  <td className="py-3 px-4 text-xs font-semibold text-[#1C1917]">
                     <div className="flex items-center gap-2">
                       <Building2 className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
                       <span>{item.companyName}</span>
                     </div>
                   </td>
-                  <td className="font-mono text-xs text-[#57534E]">
+                  <td className="py-3 px-4 text-right font-mono text-xs text-[#57534E]">
                     ₹{item.invoiceTotal.toLocaleString('en-IN')}
                   </td>
-                  <td className="font-mono text-sm font-bold text-[#059669]">
+                  <td className="py-3 px-4 text-right font-mono text-xs font-bold text-[#059669]">
                     ₹{item.amountCollected.toLocaleString('en-IN')}
                   </td>
-                  <td>
+                  <td className="py-3 px-4 text-center">
                     {item.status === 'SETTLED' ? (
-                      <span className="badge-emerald">Fully Settled</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] font-semibold border border-[#A7F3D0]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                        Fully Settled
+                      </span>
                     ) : (
-                      <span className="badge-amber">Partial Receipt</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-[#FFFBEB] text-[#92400E] font-semibold border border-[#FDE68A]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                        Partial Receipt
+                      </span>
                     )}
                   </td>
-                  <td className="text-xs text-[#57534E]">
-                    <div>{item.paymentChannel}</div>
+                  <td className="py-3 px-4 text-xs text-[#57534E]">
+                    <div className="font-medium text-[#1C1917]">{item.paymentChannel}</div>
                     {item.utrRef && (
-                      <div className="text-[10px] font-mono text-[#A8A29E] mt-0.5">Ref: {item.utrRef}</div>
+                      <div className="text-[10px] font-mono text-[#78716C] mt-0.5">Ref: {item.utrRef}</div>
                     )}
                   </td>
-                  <td className="text-right">
+                  <td className="py-3 px-4 text-right">
                     <button
                       type="button"
                       onClick={() => alert(`Receipt for ${item.invoiceRef} downloaded.`)}
-                      className="btn-action text-xs"
+                      className="btn-action text-xs py-1 px-2.5 cursor-pointer"
                     >
                       <Download className="w-3 h-3 text-[#4F46E5]" />
                       <span>Receipt</span>

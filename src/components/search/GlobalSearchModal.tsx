@@ -164,13 +164,13 @@ export default function GlobalSearchModal() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-between px-3 py-1.5 rounded-md bg-[#F7F7F6] hover:bg-[#F2F2F0] text-xs text-[#71717A] hover:text-[#18181B] transition-colors cursor-pointer border border-[#EEEEEC]"
+        className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] hover:bg-white text-xs text-[#78716C] hover:text-[#1C1917] transition-all cursor-pointer border border-[#E2DDD2] hover:border-[#C7D2FE] shadow-2xs group"
       >
-        <div className="flex items-center gap-2">
-          <Search className="w-3.5 h-3.5 text-[#A1A1AA]" />
-          <span>Search...</span>
+        <div className="flex items-center gap-2.5">
+          <Search className="w-3.5 h-3.5 text-[#78716C] group-hover:text-[#4F46E5] transition-colors" />
+          <span className="font-medium">Search CRM leads, accounts, invoices...</span>
         </div>
-        <kbd className="text-[10px] bg-white text-[#71717A] px-1.5 py-0.5 rounded border border-[#EEEEEC] font-mono flex items-center gap-0.5 shadow-2xs">
+        <kbd className="text-[10px] bg-white text-[#57534E] px-1.5 py-0.5 rounded border border-[#E2DDD2] font-mono flex items-center gap-0.5 shadow-2xs font-semibold">
           ⌘K
         </kbd>
       </button>

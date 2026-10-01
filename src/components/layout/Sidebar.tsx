@@ -74,31 +74,31 @@ export default function Sidebar() {
   return (
     <aside className="sidebar select-none">
       {/* Brand Header */}
-      <div className="px-4 py-3.5 border-b border-[#E2DDD2] flex items-center justify-between shrink-0 bg-[#EAE6DC]">
+      <div className="px-4 py-3 border-b border-[#E2DDD2] flex items-center justify-between shrink-0 bg-[#EAE6DC]">
         <Link href="/overview" className="flex items-center gap-2">
           <BrandexLogo size="sm" showText={true} />
         </Link>
-        <span className="text-xs font-semibold px-2 py-0.5 rounded text-[#57534E] bg-[#DDD7C9]">
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-[#4F46E5] bg-[#EEF2FF] border border-[#C7D2FE]">
           CRM
         </span>
       </div>
 
       {/* Workspace Selector */}
-      <div className="px-3.5 py-2.5 border-b border-[#E2DDD2] shrink-0">
-        <div className="flex items-center justify-between text-sm text-[#1C1917] font-semibold py-2 px-2.5 rounded-lg hover:bg-[#E8E4DA] cursor-pointer transition-colors border border-transparent hover:border-[#DDD7C9]">
-          <div className="flex items-center gap-2.5 truncate">
+      <div className="px-3.5 py-3 border-b border-[#E2DDD2] shrink-0">
+        <div className="flex items-center justify-between text-xs text-[#1C1917] font-bold py-2 px-3 rounded-xl bg-white border border-[#E2DDD2] hover:bg-[#FAF8F5] cursor-pointer transition-all shadow-2xs">
+          <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-            <span className="truncate font-semibold tracking-tight">Brandex Global HQ</span>
+            <span className="truncate font-bold tracking-tight">Brandex Global HQ</span>
           </div>
-          <ChevronDown className="w-4 h-4 text-[#78716C] shrink-0" />
+          <ChevronDown className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
         </div>
       </div>
 
       {/* Navigation Groups — Independently Scrollable */}
-      <nav className="sidebar-nav space-y-5">
+      <nav className="sidebar-nav space-y-6 pb-10">
         {NAV_GROUPS.map((group) => (
           <div key={group.title}>
-            <div className="text-xs font-bold text-[#78716C] uppercase tracking-wider px-3 mb-1.5">
+            <div className="text-[11px] font-extrabold text-[#78716C] uppercase tracking-wider px-3 mb-2 pt-1">
               {group.title}
             </div>
             <div className="space-y-1">

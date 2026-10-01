@@ -313,7 +313,7 @@ export default function ContactsManager() {
                           )}
                         </td>
                         <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="inline-flex items-center bg-[#FAF8F5] border border-[#E2DDD2] rounded-lg p-0.5">
                             <button
                               type="button"
                               onClick={() => {
@@ -326,7 +326,7 @@ export default function ContactsManager() {
                                   isPrimary: contact.isPrimary,
                                 });
                               }}
-                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#1C1917] hover:bg-[#F3EFE7] transition-colors"
+                              className="p-1 rounded-md text-[#78716C] hover:text-[#1C1917] hover:bg-white transition-colors"
                               title="Edit contact"
                             >
                               <Pencil className="w-3.5 h-3.5" />
@@ -334,7 +334,7 @@ export default function ContactsManager() {
                             <button
                               type="button"
                               onClick={() => handleDelete(contact.id)}
-                              className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                              className="p-1 rounded-md text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
                               title="Delete contact"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

@@ -435,7 +435,7 @@ export default function TasksManager() {
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1.5">
                           <button
                             type="button"
                             onClick={() => handleToggleStatus(task)}
@@ -444,31 +444,33 @@ export default function TasksManager() {
                           >
                             {isDone ? 'Reopen' : 'Done'}
                           </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEditingTask(task);
-                              setEditFormData({
-                                title: task.title,
-                                description: task.description || '',
-                                dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
-                                priority: task.priority || 'MEDIUM',
-                                category: task.category || 'FOLLOW_UP',
-                              });
-                            }}
-                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#1C1917] hover:bg-[#F3EFE7] transition-colors"
-                            title="Edit task"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteTask(task.id)}
-                            className="p-1.5 rounded-lg border border-[#E2DDD2] bg-white text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
-                            title="Delete task"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="inline-flex items-center bg-[#FAF8F5] border border-[#E2DDD2] rounded-lg p-0.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingTask(task);
+                                setEditFormData({
+                                  title: task.title,
+                                  description: task.description || '',
+                                  dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
+                                  priority: task.priority || 'MEDIUM',
+                                  category: task.category || 'FOLLOW_UP',
+                                });
+                              }}
+                              className="p-1 rounded-md text-[#78716C] hover:text-[#1C1917] hover:bg-white transition-colors"
+                              title="Edit task"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTask(task.id)}
+                              className="p-1 rounded-md text-[#78716C] hover:text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                              title="Delete task"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       </td>
                     </tr>

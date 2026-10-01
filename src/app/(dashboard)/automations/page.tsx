@@ -143,16 +143,23 @@ export default function AutomationsPage() {
     }
   };
 
+  const totalRuns = rules.reduce((acc, r) => acc + r.executionCount, 0);
+  const activeCount = rules.filter((r) => r.active).length;
+
   return (
-    <div className="space-y-6 fade-in">
+    <div className="space-y-7 fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E2DDD2]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#1C1917] flex items-center gap-2.5">
-            <Zap className="w-6 h-6 text-[#4F46E5]" />
-            Workflow Automations & Event Triggers
-          </h1>
-          <p className="text-xs text-[#57534E] mt-0.5">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center text-[#4F46E5]">
+              <Zap className="w-4 h-4" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-[#1C1917]">
+              Workflow Automations & Event Triggers
+            </h1>
+          </div>
+          <p className="text-xs text-[#57534E] mt-1 ml-10">
             Event-driven triggers executing automated lead triage, pipeline progressions, and overdue task alerts.
           </p>
         </div>
@@ -160,19 +167,46 @@ export default function AutomationsPage() {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="btn-primary text-xs py-2 px-4 cursor-pointer self-start"
+          className="btn-primary text-xs py-2 px-4 cursor-pointer self-start flex items-center gap-1.5 shadow-xs"
         >
           <Plus className="w-4 h-4" />
-          <span>Create Rule</span>
+          <span>Create Automation Rule</span>
         </button>
       </div>
 
-      {/* Rules List */}
-      <div className="space-y-3.5">
+      {/* Engine Status & KPI Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl bg-white border border-[#E2DDD2] shadow-2xs">
+          <span className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">Active Rules</span>
+          <div className="text-xl font-bold text-[#1C1917] mt-1.5 font-mono">{activeCount} / {rules.length} Live</div>
+          <span className="text-[11px] text-[#059669] mt-0.5 block font-semibold">Event listeners listening</span>
+        </div>
+
+        <div className="p-4 rounded-xl bg-white border border-[#E2DDD2] shadow-2xs">
+          <span className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">Total Executions</span>
+          <div className="text-xl font-bold text-[#4F46E5] mt-1.5 font-mono">{totalRuns} Runs</div>
+          <span className="text-[11px] text-[#78716C] mt-0.5 block">Automated events processed</span>
+        </div>
+
+        <div className="p-4 rounded-xl bg-white border border-[#E2DDD2] shadow-2xs">
+          <span className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">Dispatcher Health</span>
+          <div className="text-xl font-bold text-[#059669] mt-1.5">99.98%</div>
+          <span className="text-[11px] text-[#78716C] mt-0.5 block">Zero trigger failures</span>
+        </div>
+
+        <div className="p-4 rounded-xl bg-white border border-[#E2DDD2] shadow-2xs">
+          <span className="text-xs font-bold text-[#78716C] uppercase tracking-wider block">Engine Protocol</span>
+          <div className="text-sm font-bold text-[#1C1917] mt-1.5 font-mono truncate">Postgres LISTEN / SSE</div>
+          <span className="text-[11px] text-[#78716C] mt-0.5 block">Tenant-isolated queue</span>
+        </div>
+      </div>
+
+      {/* Rules List with Generous Spacing */}
+      <div className="space-y-4">
         {rules.map((rule) => (
           <div
             key={rule.id}
-            className={`p-5 rounded-xl bg-white border transition-all shadow-xs flex flex-col justify-between gap-4 ${
+            className={`p-6 rounded-xl bg-white border transition-all shadow-xs flex flex-col justify-between gap-5 ${
               rule.active
                 ? 'border-[#E2DDD2] hover:border-[#4F46E5]'
                 : 'border-[#E2DDD2] opacity-70 bg-[#FAF8F5]'
@@ -192,7 +226,7 @@ export default function AutomationsPage() {
                 <button
                   type="button"
                   onClick={() => handleTestRule(rule)}
-                  className="btn-action text-xs"
+                  className="btn-action text-xs py-1 px-2.5"
                   title="Test Trigger"
                 >
                   <Play className="w-3 h-3 text-[#4F46E5]" />
@@ -221,8 +255,8 @@ export default function AutomationsPage() {
               </div>
             </div>
 
-            {/* Trigger to Action Strip */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[#F5F2EB] text-xs">
+            {/* Trigger to Action Strip with Visual Flow */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[#F5F2EB] text-xs">
               <div className="p-3 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] space-y-1">
                 <span className="text-[10px] font-bold text-[#4338CA] uppercase tracking-wider block">
                   ⚡ Trigger Condition

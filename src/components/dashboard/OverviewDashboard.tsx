@@ -121,7 +121,7 @@ export default function OverviewDashboard({ initialData }: OverviewProps) {
   return (
     <div className="space-y-8 fade-in">
       {/* 1. Header & Priority Greeting */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2DDD2]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#1C1917]">
             Good morning, Pavan
